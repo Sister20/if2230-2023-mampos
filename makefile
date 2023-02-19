@@ -30,7 +30,7 @@ kernel:
 	@$(ASM) $(AFLAGS) $(SOURCE_FOLDER)/kernel_loader.s -o $(OUTPUT_FOLDER)/kernel_loader.o
 # TODO: Compile C file with CFLAGS
 	$(CC) $(CFLAGS) src/kernel.c -o kernel.o
-	@$(LIN) $(LFLAGS) bin/*.o -o $(OUTPUT_FOLDER)/kernel
+	@$(LIN) $(LFLAGS) bin/*.o -o iso/boot/kernel
 	@echo Linking object files and generate elf32...
 	@rm -f *.o
 

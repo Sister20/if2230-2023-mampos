@@ -9,7 +9,9 @@
  *  @param port The I/O port to send the data to
  *  @param data The data to send to the I/O port
  */
-void out(uint16_t port, uint8_t data);
+void out(uint16_t port, uint8_t data) {
+    asm volatile ("outb %0, %1" : : "a"(data), "Nd"(port));
+}
 
 /** in:
  *  Read data from the given I/O port
