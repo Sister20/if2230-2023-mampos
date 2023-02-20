@@ -35,5 +35,6 @@ void kernel_setup(void) {
     
 
     framebuffer_set_cursor(5, 13);
+
     while (TRUE);
 }
