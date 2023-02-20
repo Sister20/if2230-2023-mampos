@@ -83,6 +83,7 @@ void kernel_setup(void) {
     framebuffer_write(11, 21, ' ', 0, 0x8);
     framebuffer_write(11, 22, ' ', 0, 0x8);
     framebuffer_write(11, 23, ' ', 0, 0x8);
+    framebuffer_write(11, 24, ' ', 0, 0x8);
     framebuffer_write(11, 25, ' ', 0, 0x8);
     framebuffer_write(11, 26, ' ', 0, 0x8);
     framebuffer_write(11, 27, ' ', 0, 0x8);
@@ -137,7 +138,90 @@ void kernel_setup(void) {
     framebuffer_write(13, 28, ' ', 0, 0x5);
     framebuffer_write(13, 29, ' ', 0, 0x8);
     framebuffer_write(13, 30, ' ', 0, 0x8);
-    
+
+    framebuffer_write(14, 1, ' ', 0, 0x8);//row 7
+    framebuffer_write(14, 2, ' ', 0, 0x8);
+    framebuffer_write(14, 3, ' ', 0, 0x8);
+    framebuffer_write(14, 4, ' ', 0, 0x8);
+    framebuffer_write(14, 5, ' ', 0, 0xF);
+    framebuffer_write(14, 6, ' ', 0, 0xF);
+    framebuffer_write(14, 7, ' ', 0, 0x8);
+    framebuffer_write(14, 8, ' ', 0, 0x8);
+    framebuffer_write(14, 9, ' ', 0, 0x8);
+    framebuffer_write(14, 10, ' ', 0, 0x8);
+    framebuffer_write(14, 11, ' ', 0, 0x5);
+    framebuffer_write(14, 12, ' ', 0, 0x5);
+    framebuffer_write(14, 13, ' ', 0, 0x8);
+    framebuffer_write(14, 14, ' ', 0, 0x8);
+    framebuffer_write(14, 15, ' ', 0, 0xD);
+    framebuffer_write(14, 16, ' ', 0, 0xD);
+    framebuffer_write(14, 17, ' ', 0, 0xD);
+    framebuffer_write(14, 18, ' ', 0, 0xD);
+    framebuffer_write(14, 19, ' ', 0, 0xD);
+    framebuffer_write(14, 20, ' ', 0, 0xD);
+    framebuffer_write(14, 21, ' ', 0, 0x5);
+    framebuffer_write(14, 22, ' ', 0, 0x5);
+    framebuffer_write(14, 23, ' ', 0, 0x5);
+    framebuffer_write(14, 24, ' ', 0, 0x5);
+    framebuffer_write(14, 25, ' ', 0, 0x8);
+    framebuffer_write(14, 26, ' ', 0, 0x8);
+    framebuffer_write(14, 27, ' ', 0, 0x8);
+    framebuffer_write(14, 28, ' ', 0, 0x8);
+    framebuffer_write(14, 29, ' ', 0, 0x8);
+    framebuffer_write(14, 30, ' ', 0, 0x8);
+
+    framebuffer_write(15, 1, ' ', 0, 0x8);//row 8
+    framebuffer_write(15, 2, ' ', 0, 0x8);
+    framebuffer_write(15, 3, ' ', 0, 0xF);
+    framebuffer_write(15, 4, ' ', 0, 0xF);
+    framebuffer_write(15, 5, ' ', 0, 0xF);
+    framebuffer_write(15, 6, ' ', 0, 0xF);
+    framebuffer_write(15, 7, ' ', 0, 0xF);
+    framebuffer_write(15, 8, ' ', 0, 0xF);
+    framebuffer_write(15, 9, ' ', 0, 0x8);
+    framebuffer_write(15, 10, ' ', 0, 0x8);
+    framebuffer_write(15, 11, ' ', 0, 0x8);
+    framebuffer_write(15, 12, ' ', 0, 0x8);
+    framebuffer_write(15, 13, ' ', 0, 0x5);
+    framebuffer_write(15, 14, ' ', 0, 0x5);
+    framebuffer_write(15, 15, ' ', 0, 0x8);
+    framebuffer_write(15, 16, ' ', 0, 0x8);
+    framebuffer_write(15, 17, ' ', 0, 0xD);
+    framebuffer_write(15, 18, ' ', 0, 0xD);
+    framebuffer_write(15, 19, ' ', 0, 0xD);
+    framebuffer_write(15, 20, ' ', 0, 0xD);
+    framebuffer_write(15, 21, ' ', 0, 0xD);
+    framebuffer_write(15, 22, ' ', 0, 0xD);
+    framebuffer_write(15, 23, ' ', 0, 0x5);
+    framebuffer_write(15, 24, ' ', 0, 0x5);
+    framebuffer_write(15, 25, ' ', 0, 0x8);
+    framebuffer_write(15, 26, ' ', 0, 0x8);
+
+
+    framebuffer_write(16, 3, ' ', 0, 0x8);//row 9
+    framebuffer_write(16, 4, ' ', 0, 0x8);
+    framebuffer_write(16, 5, ' ', 0, 0xF);
+    framebuffer_write(16, 6, ' ', 0, 0xF);
+    framebuffer_write(16, 7, ' ', 0, 0xF);
+    framebuffer_write(16, 8, ' ', 0, 0xF);
+    framebuffer_write(16, 9, ' ', 0, 0xF);
+    framebuffer_write(16, 10, ' ', 0, 0xF);
+    framebuffer_write(16, 11, ' ', 0, 0xF);
+    framebuffer_write(16, 12, ' ', 0, 0xF);
+    framebuffer_write(16, 13, ' ', 0, 0xD);
+    framebuffer_write(16, 14, ' ', 0, 0xD);
+    framebuffer_write(16, 15, ' ', 0, 0x8);
+    framebuffer_write(16, 16, ' ', 0, 0x8);
+    framebuffer_write(16, 17, ' ', 0, 0xD);
+    framebuffer_write(16, 18, ' ', 0, 0xD);
+    framebuffer_write(16, 19, ' ', 0, 0xD);
+    framebuffer_write(16, 20, ' ', 0, 0xD);
+    framebuffer_write(16, 21, ' ', 0, 0xD);
+    framebuffer_write(16, 22, ' ', 0, 0xD);
+    framebuffer_write(16, 23, ' ', 0, 0x5);
+    framebuffer_write(16, 24, ' ', 0, 0x5);
+    framebuffer_write(16, 25, ' ', 0, 0x8);
+    framebuffer_write(16, 26, ' ', 0, 0x8);
 
 
 
