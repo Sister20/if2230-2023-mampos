@@ -139,6 +139,7 @@ void kernel_setup(void) {
     framebuffer_write(13, 29, ' ', 0, 0x8);
     framebuffer_write(13, 30, ' ', 0, 0x8);
 
+<<<<<<< Updated upstream
     framebuffer_write(14, 1, ' ', 0, 0x8);//row 7
     framebuffer_write(14, 2, ' ', 0, 0x8);
     framebuffer_write(14, 3, ' ', 0, 0x8);
@@ -222,6 +223,134 @@ void kernel_setup(void) {
     framebuffer_write(16, 24, ' ', 0, 0x5);
     framebuffer_write(16, 25, ' ', 0, 0x8);
     framebuffer_write(16, 26, ' ', 0, 0x8);
+=======
+    framebuffer_write(21, 13, ' ', 0, 0x8);//row 14
+    framebuffer_write(21, 14, ' ', 0, 0x8);
+    framebuffer_write(21, 15, ' ', 0, 0x8);
+    framebuffer_write(21, 16, ' ', 0, 0x8);
+    framebuffer_write(21, 17, ' ', 0, 0x8);
+    framebuffer_write(21, 18, ' ', 0, 0x8);
+    framebuffer_write(21, 19, ' ', 0, 0x8);
+    framebuffer_write(21, 20, ' ', 0, 0x8);
+    framebuffer_write(21, 21, ' ', 0, 0x8);
+    framebuffer_write(21, 22, ' ', 0, 0x8);
+    framebuffer_write(21, 23, ' ', 0, 0x8);
+    framebuffer_write(21, 24, ' ', 0, 0x8);
+    framebuffer_write(21, 25, ' ', 0, 0x8);
+    framebuffer_write(21, 26, ' ', 0, 0x8);
+    framebuffer_write(21, 27, ' ', 0, 0x8);
+    framebuffer_write(21, 28, ' ', 0, 0x8);
+    framebuffer_write(21, 29, ' ', 0, 0x8);
+    framebuffer_write(21, 30, ' ', 0, 0x8);
+
+    framebuffer_write(20, 11, ' ', 0, 0x8);//row 13
+    framebuffer_write(20, 12, ' ', 0, 0x8);
+    framebuffer_write(20, 13, ' ', 0, 0xD);
+    framebuffer_write(20, 14, ' ', 0, 0xD);
+    framebuffer_write(20, 15, ' ', 0, 0xD);
+    framebuffer_write(20, 16, ' ', 0, 0xD);
+    framebuffer_write(20, 17, ' ', 0, 0xD);
+    framebuffer_write(20, 18, ' ', 0, 0xD);
+    framebuffer_write(20, 19, ' ', 0, 0xD);
+    framebuffer_write(20, 20, ' ', 0, 0xD);
+    framebuffer_write(20, 21, ' ', 0, 0x5);
+    framebuffer_write(20, 22, ' ', 0, 0x5);
+    framebuffer_write(20, 23, ' ', 0, 0x5);
+    framebuffer_write(20, 24, ' ', 0, 0x5);
+    framebuffer_write(20, 25, ' ', 0, 0x5);
+    framebuffer_write(20, 26, ' ', 0, 0x5);
+    framebuffer_write(20, 27, ' ', 0, 0x5);
+    framebuffer_write(20, 28, ' ', 0, 0x5);
+    framebuffer_write(20, 29, ' ', 0, 0xD);
+    framebuffer_write(20, 30, ' ', 0, 0xD);
+
+    framebuffer_write(19, 3, ' ', 0, 0x8);//row 12
+    framebuffer_write(19, 4, ' ', 0, 0x8);
+    framebuffer_write(19, 5, ' ', 0, 0x8);
+    framebuffer_write(19, 6, ' ', 0, 0x8);
+    framebuffer_write(19, 9, ' ', 0, 0x8);
+    framebuffer_write(19, 10, ' ', 0, 0x8);
+    framebuffer_write(19, 11, ' ', 0, 0x5);
+    framebuffer_write(19, 12, ' ', 0, 0x5);
+    framebuffer_write(19, 13, ' ', 0, 0x8);
+    framebuffer_write(19, 14, ' ', 0, 0x8);
+    framebuffer_write(19, 15, ' ', 0, 0xD);
+    framebuffer_write(19, 16, ' ', 0, 0xD);
+    framebuffer_write(19, 17, ' ', 0, 0xD);
+    framebuffer_write(19, 18, ' ', 0, 0xD);
+    framebuffer_write(19, 19, ' ', 0, 0xD);
+    framebuffer_write(19, 20, ' ', 0, 0xD);
+    framebuffer_write(19, 21, ' ', 0, 0xD);
+    framebuffer_write(19, 22, ' ', 0, 0xD);
+    framebuffer_write(19, 23, ' ', 0, 0x5);
+    framebuffer_write(19, 24, ' ', 0, 0x5);
+    framebuffer_write(19, 25, ' ', 0, 0x5);
+    framebuffer_write(19, 26, ' ', 0, 0x5);
+    framebuffer_write(19, 27, ' ', 0, 0x5);
+    framebuffer_write(19, 28, ' ', 0, 0x5);
+    framebuffer_write(19, 29, ' ', 0, 0xD);
+    framebuffer_write(19, 30, ' ', 0, 0xD);
+
+    framebuffer_write(18, 1, ' ', 0, 0x8);//row 11
+    framebuffer_write(18, 2, ' ', 0, 0x8);
+    framebuffer_write(18, 3, ' ', 0, 0x8);
+    framebuffer_write(18, 4, ' ', 0, 0x8);
+    framebuffer_write(18, 5, ' ', 0, 0xF);
+    framebuffer_write(18, 6, ' ', 0, 0xF);
+    framebuffer_write(18, 7, ' ', 0, 0x8);
+    framebuffer_write(18, 8, ' ', 0, 0x8);
+    framebuffer_write(18, 9, ' ', 0, 0x8);
+    framebuffer_write(18, 10, ' ', 0, 0x8);
+    framebuffer_write(18, 11, ' ', 0, 0x5);
+    framebuffer_write(18, 12, ' ', 0, 0x5);
+    framebuffer_write(18, 13, ' ', 0, 0x8);
+    framebuffer_write(18, 14, ' ', 0, 0x8);
+    framebuffer_write(18, 15, ' ', 0, 0xD);
+    framebuffer_write(18, 16, ' ', 0, 0xD);
+    framebuffer_write(18, 17, ' ', 0, 0xD);
+    framebuffer_write(18, 18, ' ', 0, 0xD);
+    framebuffer_write(18, 19, ' ', 0, 0xD);
+    framebuffer_write(18, 20, ' ', 0, 0xD);
+    framebuffer_write(18, 21, ' ', 0, 0xD);
+    framebuffer_write(18, 22, ' ', 0, 0xD);
+    framebuffer_write(18, 23, ' ', 0, 0x5);
+    framebuffer_write(18, 24, ' ', 0, 0x5);
+    framebuffer_write(18, 25, ' ', 0, 0x8);
+    framebuffer_write(18, 26, ' ', 0, 0x8);
+    framebuffer_write(18, 27, ' ', 0, 0x8);
+    framebuffer_write(18, 28, ' ', 0, 0x8);
+    framebuffer_write(18, 29, ' ', 0, 0xD);
+    framebuffer_write(18, 30, ' ', 0, 0xD);
+    
+    framebuffer_write(17, 1, ' ', 0, 0x8);//row 10
+    framebuffer_write(17, 2, ' ', 0, 0x8);
+    framebuffer_write(17, 3, ' ', 0, 0xF);
+    framebuffer_write(17, 4, ' ', 0, 0xF);
+    framebuffer_write(17, 5, ' ', 0, 0xF);
+    framebuffer_write(17, 6, ' ', 0, 0xF);
+    framebuffer_write(17, 7, ' ', 0, 0xF);
+    framebuffer_write(17, 8, ' ', 0, 0xF);
+    framebuffer_write(17, 9, ' ', 0, 0x8);
+    framebuffer_write(17, 10, ' ', 0, 0x8);
+    framebuffer_write(17, 11, ' ', 0, 0x8);
+    framebuffer_write(17, 12, ' ', 0, 0x8);
+    framebuffer_write(17, 13, ' ', 0, 0x5);
+    framebuffer_write(17, 14, ' ', 0, 0x5);
+    framebuffer_write(17, 15, ' ', 0, 0x8);
+    framebuffer_write(17, 16, ' ', 0, 0x8);
+    framebuffer_write(17, 17, ' ', 0, 0xD);
+    framebuffer_write(17, 18, ' ', 0, 0xD);
+    framebuffer_write(17, 19, ' ', 0, 0xD);
+    framebuffer_write(17, 20, ' ', 0, 0xD);
+    framebuffer_write(17, 21, ' ', 0, 0xD);
+    framebuffer_write(17, 22, ' ', 0, 0xD);
+    framebuffer_write(17, 23, ' ', 0, 0x5);
+    framebuffer_write(17, 24, ' ', 0, 0x5);
+    framebuffer_write(17, 25, ' ', 0, 0x8);
+    framebuffer_write(17, 26, ' ', 0, 0x8);
+
+
+>>>>>>> Stashed changes
 
 
 
