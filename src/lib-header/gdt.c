@@ -1,5 +1,5 @@
-#include "lib-header/stdtype.h"
-#include "lib-header/gdt.h"
+#include "stdtype.h"
+#include "gdt.h"
 
 /**
  * global_descriptor_table, predefined GDT.
@@ -9,15 +9,25 @@
 struct GlobalDescriptorTable global_descriptor_table = {
     .table = {
         {
-            // TODO : Implement
-            
+            .segment_low = 0,
+            .base_low = 0,
+            .base_mid = 0,
+            .type_bit = 0,
+            .non_system = 0
         },
         {
-            // TODO : Implement
-
+            .segment_low = 0xFFFF,
+            .base_low = 0,
+            .base_mid = 0,
+            .type_bit = 0x9A,
+            .non_system = 1
         },
         {
-            // TODO : Implement
+            .segment_low = 0xFFFF,
+            .base_low = 0,
+            .base_mid = 0,
+            .type_bit = 0x92,
+            .non_system = 1
         }
     }
 };
@@ -28,6 +38,6 @@ struct GlobalDescriptorTable global_descriptor_table = {
  * From: https://wiki.osdev.org/Global_Descriptor_Table, GDTR.size is GDT size minus 1.
  */
 struct GDTR _gdt_gdtr = {
-    // TODO : Implement, this GDTR will point to global_descriptor_table. 
-    //        Use sizeof operator
+    .size = sizeof(struct GlobalDescriptorTable) - 1,
+    .address = &global_descriptor_table
 };
