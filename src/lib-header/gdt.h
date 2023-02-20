@@ -24,10 +24,13 @@ struct SegmentDescriptor {
     uint16_t base_low;
 
     // Next 16-bit (Bit 32 to 47)
-    uint8_t             base_mid;
-    uint8_t type_bit   : 4;
-    uint8_t non_system : 1;
-    // TODO : Continue GDT definition
+    uint8_t  base_mid;
+    uint8_t  type_bit   : 4;
+    uint8_t  non_system : 1;
+    uint8_t  dpl        : 2;  // TODO: Descriptor Privilege Level (DPL)
+    uint8_t  present    : 1;  // TODO: Segment Present Flag
+    uint8_t  limit_high : 4;  // TODO: Upper 4 bits of Segment Limit
+    uint8_t  flags      : 4;  // TODO: Other flags
 
 } __attribute__((packed));
 
