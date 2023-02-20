@@ -10,10 +10,11 @@ struct GlobalDescriptorTable global_descriptor_table = {
     .table = {
         {
             // TODO : Implement
+            
         },
         {
             // TODO : Implement
-            
+
         },
         {
             // TODO : Implement

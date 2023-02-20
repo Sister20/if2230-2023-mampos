@@ -31,10 +31,9 @@ void kernel_setup(void) {
     framebuffer_write(7, 10, 'm', 0, 0xF);
     framebuffer_write(7, 11, 'p', 0, 0xF);
     framebuffer_write(7, 12, 'O', 0, 3);
-    framebuffer_write(7, 13, 'S', 0, 3); 
-    
+    framebuffer_write(7, 13, 'S', 0, 3);    
 
-    framebuffer_set_cursor(5, 13);
+    framebuffer_set_cursor(7, 13);
 
     while (TRUE);
 }
