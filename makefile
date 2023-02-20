@@ -6,7 +6,7 @@ CC            = gcc
 # Directory
 SOURCE_FOLDER = src
 OUTPUT_FOLDER = bin
-ISO_NAME      = os2023
+ISO_NAME      = OS2023
 
 # Flags
 WARNING_CFLAG = -Wall -Wextra -Werror
@@ -18,7 +18,7 @@ LFLAGS        = -T $(SOURCE_FOLDER)/linker.ld -melf_i386
 
 
 run: all
-	@qemu-system-i386 -s -S -cdrom $(OUTPUT_FOLDER)/$(ISO_NAME).iso
+	@qemu-system-i386 -s -cdrom $(OUTPUT_FOLDER)/$(ISO_NAME).iso
 all: build
 build: iso
 clean:
@@ -30,7 +30,7 @@ kernel:
 	@$(ASM) $(AFLAGS) $(SOURCE_FOLDER)/kernel_loader.s -o $(OUTPUT_FOLDER)/kernel_loader.o
 # TODO: Compile C file with CFLAGS
 	$(CC) $(CFLAGS) src/kernel.c -o kernel.o
-	@$(LIN) $(LFLAGS) bin/*.o -o iso/boot/kernel
+	@$(LIN) $(LFLAGS) bin/*.o -o $(OUTPUT_FOLDER)/kernel
 	@echo Linking object files and generate elf32...
 	@rm -f *.o
 
@@ -48,6 +48,6 @@ iso: kernel
 		-input-charset utf8        \
 		-quiet                     \
 		-boot-info-table           \
-		-o OS2023.iso              \
-		iso
-	@rm -r $(OUTPUT_FOLDER)/iso/
+		-o bin/OS2023.iso              \
+		bin/iso
+
