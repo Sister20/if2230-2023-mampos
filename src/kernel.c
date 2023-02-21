@@ -207,27 +207,24 @@ void kernel_setup(void) {
     framebuffer_write(22, 12+2,'a', 0xF, 0);
     framebuffer_write(22, 12+3,'n', 0xF, 0);
     framebuffer_write(22, 12+4,'n', 0xF, 0);
-    framebuffer_write(22, 12+5,'a', 0x4, 0);
+    framebuffer_write(22, 12+5,'a', 0xF, 0);
     framebuffer_write(22, 12+7,'P', 0x4, 0);
     framebuffer_write(22, 12+8,'L', 0x4, 0);
     framebuffer_write(22, 12+9,'A', 0x4, 0);
     framebuffer_write(22, 12+10,'Y', 0x4, 0);
     framebuffer_write(22, 12+11,'?', 0x4, 0);
 
-    framebuffer_write(23, 48+1,'l', 0xF, 0);//row 17
-    framebuffer_write(23, 48+2,'e', 0xF, 0);
-    framebuffer_write(23, 48+3,'t', 0xF, 0);
-    framebuffer_write(23, 48+4,'s', 0xF, 0);
-    framebuffer_write(23, 48+6,'P', 0x4, 0);
-    framebuffer_write(23, 48+7,'L', 0x4, 0);
-    framebuffer_write(23, 48+8,'A', 0x4, 0);
-    framebuffer_write(23, 48+9,'Y', 0x4, 0);
-    framebuffer_write(23, 48+10,'!', 0x4, 0);
+    framebuffer_write(23, 58+1,'l', 0xF, 0);//row 17
+    framebuffer_write(23, 58+2,'e', 0xF, 0);
+    framebuffer_write(23, 58+3,'t', 0xF, 0);
+    framebuffer_write(23, 58+4,'s', 0xF, 0);
+    framebuffer_write(23, 58+6,'P', 0x4, 0);
+    framebuffer_write(23, 58+7,'L', 0x4, 0);
+    framebuffer_write(23, 58+8,'A', 0x4, 0);
+    framebuffer_write(23, 58+9,'Y', 0x4, 0);
+    framebuffer_write(23, 58+10,'!', 0x4, 0);
 
-
-
-
-    framebuffer_set_cursor(7, 13);
+    framebuffer_set_cursor(24, 1);
 
     while (TRUE);
 }
