@@ -1,4 +1,4 @@
-*.o
-*.iso
-*
-!.gitignore
+# *.o
+# *.iso
+# *
+# !.gitignore
