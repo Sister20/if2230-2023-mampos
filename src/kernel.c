@@ -185,6 +185,26 @@ void kernel_setup(void) {
     framebuffer_write(12, 16+39,' ', 0, 0xF);
     framebuffer_write(12, 16+40,' ', 0, 0xF);
 
+    framebuffer_write(18, 34+1,'W', 0xF, 0);//row 15
+    framebuffer_write(18, 34+2,'e', 0xF, 0);
+    framebuffer_write(18, 34+3,'l', 0xF, 0);
+    framebuffer_write(18, 34+4,'c', 0xF, 0);
+    framebuffer_write(18, 34+5,'o', 0xF, 0);
+    framebuffer_write(18, 34+6,'m', 0xF, 0);
+    framebuffer_write(18, 34+7,'e', 0xF, 0);
+
+    framebuffer_write(18, 34+9,'t', 0xF, 0);//row 16
+    framebuffer_write(18, 34+10,'o', 0xF, 0);
+
+    framebuffer_write(20, 33+1,'m', 0xF, 0);//row 17
+    framebuffer_write(20, 33+3,'a', 0xF, 0);
+    framebuffer_write(20, 33+5,'m', 0xF, 0);
+    framebuffer_write(20, 33+7,'p', 0xF, 0);
+    framebuffer_write(20, 33+10,'O', 0x4, 0);
+    framebuffer_write(20, 33+12,'S', 0x4, 0);
+
+
+
 
     framebuffer_set_cursor(7, 13);
 
