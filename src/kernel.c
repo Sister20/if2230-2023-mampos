@@ -203,7 +203,19 @@ void kernel_setup(void) {
     framebuffer_write(20, 33+10,'O', 0x4, 0);
     framebuffer_write(20, 33+12,'S', 0x4, 0);
 
+    framebuffer_write(22, 12+1,'m', 0xF, 0);//row 17
+    framebuffer_write(22, 12+3,'a', 0xF, 0);
+    framebuffer_write(22, 12+5,'m', 0xF, 0);
+    framebuffer_write(22, 12+7,'p', 0xF, 0);
+    framebuffer_write(22, 12+10,'O', 0x4, 0);
+    framebuffer_write(22, 12+12,'S', 0x4, 0);
 
+    framebuffer_write(24, 48+1,'m', 0xF, 0);//row 17
+    framebuffer_write(24, 48+3,'a', 0xF, 0);
+    framebuffer_write(24, 48+5,'m', 0xF, 0);
+    framebuffer_write(24, 48+7,'p', 0xF, 0);
+    framebuffer_write(24, 48+10,'O', 0x4, 0);
+    framebuffer_write(24, 48+12,'S', 0x4, 0);
 
 
     framebuffer_set_cursor(7, 13);
