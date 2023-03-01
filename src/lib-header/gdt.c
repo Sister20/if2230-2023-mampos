@@ -15,6 +15,13 @@ struct GlobalDescriptorTable global_descriptor_table = {
             .base_mid = 0,
             .type_bit = 0,
             .non_system = 0,
+            .DPL = 0,
+            .P = 0,
+            .segment_limit = 0,
+            .AVL = 0,
+            .L = 0,
+            .D_B = 0,
+            .G = 0,
             .base_high = 0
         },
         // Kernel Code
@@ -24,7 +31,14 @@ struct GlobalDescriptorTable global_descriptor_table = {
             .base_mid = 0x00,
             .type_bit = 0xA,
             .non_system = 1,
-            .base_high = 0xFF
+            .DPL = 0,
+            .P = 1,
+            .segment_limit = 0xF,
+            .AVL = 0,
+            .L = 1,
+            .D_B = 1,
+            .G = 1,
+            .base_high = 0x00
         },
         // Kernel Data
         {
@@ -33,10 +47,19 @@ struct GlobalDescriptorTable global_descriptor_table = {
             .base_mid = 0x00,
             .type_bit = 0x2,
             .non_system = 1,
-            .base_high = 0xFF
+            .DPL = 0,
+            .P = 1,
+            .segment_limit = 0xF,
+            .AVL = 0,
+            .L = 0,
+            .D_B = 1,
+            .G = 1,
+            .base_high = 0x00
         }
     }
 };
+
+
 
 /**
  * _gdt_gdtr, predefined system GDTR. 

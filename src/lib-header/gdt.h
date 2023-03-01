@@ -22,14 +22,21 @@ struct SegmentDescriptor {
     // First 32-bit
     uint16_t segment_low;
     uint16_t base_low;
-    uint8_t  base_mid;
 
-    // Second 32-bit
+    // Next 16-bit (Bit 32 to 47)
+    uint8_t  base_mid;
     uint8_t  type_bit : 4;
     uint8_t  non_system : 1;
 
-    // Third 32-bit
-    uint8_t  base_high;
+    // TODO : Continue GDT definition
+    uint8_t  DPL : 2;
+    uint8_t  P : 1;
+    uint8_t  segment_limit : 4;
+    uint8_t  AVL : 1;
+    uint8_t  L : 1;
+    uint8_t  D_B : 1;
+    uint8_t  G : 1;
+    uint8_t  base_high : 8;
 
 } __attribute__((packed));
 
