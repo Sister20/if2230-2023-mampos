@@ -8,6 +8,13 @@
 void kernel_setup(void) {
     enter_protected_mode(&_gdt_gdtr);
     framebuffer_clear();
+
+    framebuffer_clear();
+    framebuffer_write(3, 8,  'H', 0, 0xF);
+    framebuffer_write(3, 9,  'a', 0, 0xF);
+    framebuffer_write(3, 10, 'i', 0, 0xF);
+    framebuffer_write(3, 11, '!', 0, 0xF);
+
     framebuffer_write(2, 16+3, ' ', 0, 0x4); //row 2
     framebuffer_write(2, 16+4, ' ', 0, 0x4);
     framebuffer_write(2, 16+5, ' ', 0, 0x4);
@@ -66,10 +73,10 @@ void kernel_setup(void) {
 
     framebuffer_write(9, 16+1, ' ', 0, 0x8); //row 9
     framebuffer_write(9, 16+2, ' ', 0, 0x8);
-    framebuffer_write(9, 16+3, ' ', 0, 0x8);
-    framebuffer_write(9, 16+4, ' ', 0, 0x8);
-    framebuffer_write(9, 16+43, ' ', 0, 0xF);
-    framebuffer_write(9, 16+44, ' ', 0, 0xF);
+    // framebuffer_write(9, 16+3, ' ', 0, 0x8);
+    // framebuffer_write(9, 16+4, ' ', 0, 0x8);
+    // framebuffer_write(9, 16+43, ' ', 0, 0xF);
+    // framebuffer_write(9, 16+44, ' ', 0, 0xF);
     framebuffer_write(9, 16+45, ' ', 0, 0xF);
     framebuffer_write(9, 16+46, ' ', 0, 0xF);
 
