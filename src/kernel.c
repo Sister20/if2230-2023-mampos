@@ -1,11 +1,12 @@
 #include "lib-header/portio.h"
 #include "lib-header/stdtype.h"
 #include "lib-header/stdmem.h"
-#include "lib-header/gdt.h"
+#include "lib-header/gdt.c"
 #include "lib-header/framebuffer.h"
 #include "lib-header/kernel_loader.h"
 
 void kernel_setup(void) {
+    // enter_protected_mode(&_gdt_gdtr);
     framebuffer_clear();
     framebuffer_write(2, 16+3, ' ', 0, 0x4); //row 2
     framebuffer_write(2, 16+4, ' ', 0, 0x4);
@@ -224,7 +225,7 @@ void kernel_setup(void) {
     framebuffer_write(23, 58+9,'Y', 0x4, 0);
     framebuffer_write(23, 58+10,'!', 0x4, 0);
 
-    framebuffer_set_cursor(24, 1);
+    framebuffer_set_cursor(20, 45);
 
     while (TRUE);
 }

@@ -8,26 +8,32 @@
  */
 struct GlobalDescriptorTable global_descriptor_table = {
     .table = {
+        // Null Descriptor
         {
             .segment_low = 0,
             .base_low = 0,
             .base_mid = 0,
             .type_bit = 0,
-            .non_system = 0
+            .non_system = 0,
+            .base_high = 0
         },
+        // Kernel Code
         {
             .segment_low = 0xFFFF,
-            .base_low = 0,
-            .base_mid = 0,
-            .type_bit = 0x9A,
-            .non_system = 1
+            .base_low = 0x0000,
+            .base_mid = 0x00,
+            .type_bit = 0xA,
+            .non_system = 1,
+            .base_high = 0xFF
         },
+        // Kernel Data
         {
             .segment_low = 0xFFFF,
-            .base_low = 0,
-            .base_mid = 0,
-            .type_bit = 0x92,
-            .non_system = 1
+            .base_low = 0x0000,
+            .base_mid = 0x00,
+            .type_bit = 0x2,
+            .non_system = 1,
+            .base_high = 0xFF
         }
     }
 };
