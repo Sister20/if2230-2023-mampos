@@ -19,9 +19,9 @@ void pic_ack(uint8_t irq)
 {
     if (irq >= PIC1_OFFSET)
     {
-        outb(PIC2_COMMAND, PIC_ACK);
+        out(PIC2_COMMAND, PIC_ACK);
     }
-    outb(PIC1_COMMAND, PIC_ACK);
+    out(PIC1_COMMAND, PIC_ACK);
 }
 
 // Shift PIC interrupt number to PIC1_OFFSET and PIC2_OFFSET (master and slave)
@@ -57,19 +57,12 @@ void pic_remap(void)
     out(PIC2_DATA, a2);
 }
 
-void main_interrupt_handler(struct CPURegister cpu, uint32_t int_number, struct InterruptStack frame)
+void main_interrupt_handler(
+    __attribute__((unused)) struct CPURegister cpu,
+    uint32_t int_number,
+    __attribute__((unused)) struct InterruptStack info)
 {
-    // Call respective ISR based on interrupt number
     switch (int_number)
     {
-    case IRQ_TIMER:
-        timer_interrupt_handler(cpu, frame);
-        break;
-    case IRQ_KEYBOARD:
-        keyboard_interrupt_handler(cpu, frame);
-        break;
-    case IRQ_MOUSE:
-        mouse_interrupt_handler(cpu, frame);
-        break;
     }
 }

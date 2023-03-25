@@ -1,11 +1,11 @@
 #ifndef _IDT_H
 #define _IDT_H
 
-#include "stdtype.h"
+#include "../lib-header/stdtype.h"
 
 // IDT hard limit, see Intel x86 manual 3a - 6.10 Interrupt Descriptor Table
-#define IDT_MAX_ENTRY_COUNT    256
-#define ISR_STUB_TABLE_LIMIT   64
+#define IDT_MAX_ENTRY_COUNT 256
+#define ISR_STUB_TABLE_LIMIT 64
 #define INTERRUPT_GATE_R_BIT_1 0b000
 #define INTERRUPT_GATE_R_BIT_2 0b110
 #define INTERRUPT_GATE_R_BIT_3 0b0
@@ -13,7 +13,6 @@
 // Some GDT Constant
 #define GDT_KERNEL_CODE_SEGMENT_SELECTOR 0x8
 #define GDT_KERNEL_DATA_SEGMENT_SELECTOR 0x10
-
 
 // Interrupt Handler / ISR stub for reducing code duplication, this array can be iterated in initialize_idt()
 extern void *isr_stub_table[ISR_STUB_TABLE_LIMIT];
@@ -33,7 +32,8 @@ extern struct IDTR _idt_idtr;
  * @param _r_bit_3    Reserved for idtgate type, bit length: 1
  * ...
  */
-struct IDTGate {
+struct IDTGate
+{
     // First 32-bit (Bit 0 to 31)
     uint16_t offset_low;
 
@@ -41,11 +41,14 @@ struct IDTGate {
     uint16_t segment;
 
     // Second 32-bit (Bit 32 to 63)
-    uint8_t  _reserved;
-    uint8_t  _r_bit_1  : 3;
-    uint8_t  _r_bit_2  : 3;
-    uint8_t  gate_32   : 1;
-    uint8_t  _r_bit_3  : 1;
+    uint8_t _reserved;
+    uint8_t _r_bit_1 : 3;
+    uint8_t _r_bit_2 : 3;
+    uint8_t gate_32 : 1;
+    uint8_t _r_bit_3 : 1;
+    uint8_t privilege : 2;
+    uint8_t present : 1;
+    uint8_t valid : 1;
     uint16_t offset_high;
 } __attribute__((packed));
 extern struct IDTGate idt[IDT_MAX_ENTRY_COUNT];
@@ -57,9 +60,11 @@ extern struct IDTGate idt[IDT_MAX_ENTRY_COUNT];
  * ...
  */
 // TODO : Implement
-struct IDT {
+struct IDT
+{
     uint16_t limit;
-    struct IDTGate* base;
+    struct IDTGate *base;
+    struct IDTGate table[IDT_MAX_ENTRY_COUNT];
 } __attribute__((packed));
 extern struct IDT IDT;
 
@@ -70,25 +75,23 @@ extern struct IDT IDT;
  * ...
  */
 // TODO : Implement
-struct IDTR {
+struct IDTR
+{
     uint16_t limit;
     uint32_t base;
 } __attribute__((packed));
 extern struct IDTR _idt_idtr;
 
-
-
 /**
  * Set IDTGate with proper interrupt handler values.
  * Will directly edit global IDT variable and set values properly
- * 
+ *
  * @param int_vector       Interrupt vector to handle
  * @param handler_address  Interrupt handler address
  * @param gdt_seg_selector GDT segment selector, for kernel use GDT_KERNEL_CODE_SEGMENT_SELECTOR
  * @param privilege        Descriptor privilege level
  */
 void set_interrupt_gate(uint8_t int_vector, void *handler_address, uint16_t gdt_seg_selector, uint8_t privilege);
-
 
 /**
  * Set IDT with proper values and load with lidt

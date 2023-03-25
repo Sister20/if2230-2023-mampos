@@ -22,8 +22,7 @@ struct GlobalDescriptorTable global_descriptor_table = {
             .L = 0,
             .D_B = 0,
             .G = 0,
-            .base_high = 0
-        },
+            .base_high = 0},
         // Kernel Code
         {
             .segment_low = 0xFFFF,
@@ -38,8 +37,7 @@ struct GlobalDescriptorTable global_descriptor_table = {
             .L = 1,
             .D_B = 1,
             .G = 1,
-            .base_high = 0x00
-        },
+            .base_high = 0x00},
         // Kernel Data
         {
             .segment_low = 0xFFFF,
@@ -54,19 +52,13 @@ struct GlobalDescriptorTable global_descriptor_table = {
             .L = 0,
             .D_B = 1,
             .G = 1,
-            .base_high = 0x00
-        }
-    }
-};
-
-
+            .base_high = 0x00}}};
 
 /**
- * _gdt_gdtr, predefined system GDTR. 
+ * _gdt_gdtr, predefined system GDTR.
  * GDT pointed by this variable is already set to point global_descriptor_table above.
  * From: https://wiki.osdev.org/Global_Descriptor_Table, GDTR.size is GDT size minus 1.
  */
 struct GDTR _gdt_gdtr = {
     .size = sizeof(struct GlobalDescriptorTable) - 1,
-    .address = &global_descriptor_table
-};
+    .address = &global_descriptor_table};
