@@ -28,8 +28,10 @@ clean:
 
 kernel:
 	$(ASM) $(AFLAGS) $(SOURCE_FOLDER)/kernel_loader.s -o $(OUTPUT_FOLDER)/kernel_loader.o
+	$(ASM) $(AFLAGS) $(SOURCE_FOLDER)/interrupt/intsetup.s -o $(OUTPUT_FOLDER)/intsetup.o
 # TODO: Compile C file with CFLAGS
 	@$(CC) $(CFLAGS) src/kernel.c -o bin/kernel.o
+	@$(CC) $(CFLAGS) src/portio.c -o bin/portio.o
 	@$(CC) $(CFLAGS) src/lib-header/gdt.c -o bin/gdt.o 
 	@$(CC) $(CFLAGS) src/interrupt/idt.c -o bin/idt.o 
 	@$(CC) $(CFLAGS) src/interrupt/interrupt.c -o bin/interrupt.o 

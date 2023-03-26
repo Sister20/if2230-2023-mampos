@@ -41,13 +41,12 @@ struct IDTGate
     uint16_t segment;
 
     // Second 32-bit (Bit 32 to 63)
-    uint8_t _reserved;
+    uint8_t _reserved : 5;
     uint8_t _r_bit_1 : 3;
     uint8_t _r_bit_2 : 3;
     uint8_t gate_32 : 1;
     uint8_t _r_bit_3 : 1;
     uint8_t privilege : 2;
-    uint8_t present : 1;
     uint8_t valid : 1;
     uint16_t offset_high;
 } __attribute__((packed));
@@ -62,8 +61,6 @@ extern struct IDTGate idt[IDT_MAX_ENTRY_COUNT];
 // TODO : Implement
 struct IDT
 {
-    uint16_t limit;
-    struct IDTGate *base;
     struct IDTGate table[IDT_MAX_ENTRY_COUNT];
 } __attribute__((packed));
 extern struct IDT IDT;
@@ -78,7 +75,7 @@ extern struct IDT IDT;
 struct IDTR
 {
     uint16_t limit;
-    uint32_t base;
+    struct IDTGate *base;
 } __attribute__((packed));
 extern struct IDTR _idt_idtr;
 

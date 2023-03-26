@@ -14,7 +14,11 @@ void kernel_setup(void)
     pic_remap();
     initialize_idt();
     framebuffer_clear();
-    framebuffer_set_cursor(0, 0);
+    framebuffer_write(3, 8, 'H', 0, 0xF);
+    framebuffer_write(3, 9, 'a', 0, 0xF);
+    framebuffer_write(3, 10, 'i', 0, 0xF);
+    framebuffer_write(3, 11, '!', 0, 0xF);
+    framebuffer_set_cursor(15, 20);
     __asm__("int $0x4");
     while (TRUE)
         ;
@@ -25,10 +29,6 @@ void kernel_setup(void)
     // framebuffer_clear();
 
     // framebuffer_clear();
-    // framebuffer_write(3, 8, 'H', 0, 0xF);
-    // framebuffer_write(3, 9, 'a', 0, 0xF);
-    // framebuffer_write(3, 10, 'i', 0, 0xF);
-    // framebuffer_write(3, 11, '!', 0, 0xF);
 
     // framebuffer_write(2, 16 + 3, ' ', 0, 0x4); // row 2
     // framebuffer_write(2, 16 + 4, ' ', 0, 0x4);
