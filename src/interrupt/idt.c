@@ -32,7 +32,7 @@ void initialize_idt(void)
      * Segment: GDT_KERNEL_CODE_SEGMENT_SELECTOR
      * Privilege: 0
      */
-    for (int i = 0; i < IDT_MAX_ENTRY_COUNT; i++)
+    for (int i = 0; i < ISR_STUB_TABLE_LIMIT; i++)
     {
         set_interrupt_gate(i, isr_stub_table[i], GDT_KERNEL_CODE_SEGMENT_SELECTOR, 0);
     }

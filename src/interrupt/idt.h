@@ -50,7 +50,7 @@ struct IDTGate
     uint8_t valid : 1;
     uint16_t offset_high;
 } __attribute__((packed));
-extern struct IDTGate idt[IDT_MAX_ENTRY_COUNT];
+// extern struct IDTGate idt[IDT_MAX_ENTRY_COUNT];
 
 /**
  * Interrupt Descriptor Table, containing lists of IDTGate.
@@ -63,7 +63,7 @@ struct IDT
 {
     struct IDTGate table[IDT_MAX_ENTRY_COUNT];
 } __attribute__((packed));
-extern struct IDT IDT;
+// extern struct IDT IDT;
 
 /**
  * IDTR, carrying information where's the IDT located and size.
@@ -77,7 +77,7 @@ struct IDTR
     uint16_t limit;
     struct IDTGate *base;
 } __attribute__((packed));
-extern struct IDTR _idt_idtr;
+// extern struct IDTR _idt_idtr;
 
 /**
  * Set IDTGate with proper interrupt handler values.

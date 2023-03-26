@@ -1,12 +1,11 @@
 #include "interrupt.h"
 
 // Activate PIC mask for keyboard only
-// void activate_keyboard_interrupt(void)
-// {
-//     uint8_t keyboard_irq = PIC1_OFFSET + IRQ_KEYBOARD;
-//     uint8_t mask = inb(PIC1_DATA) & ~(1 << IRQ_KEYBOARD);
-//     outb(PIC1_DATA, mask);
-// }
+void activate_keyboard_interrupt(void) {
+    out(PIC1_DATA, PIC_DISABLE_ALL_MASK ^ (1 << IRQ_KEYBOARD));
+    out(PIC2_DATA, PIC_DISABLE_ALL_MASK);
+}
+
 
 void io_wait(void) {
     out(0x80, 0);
@@ -55,6 +54,10 @@ void main_interrupt_handler(
     __attribute__((unused)) struct InterruptStack info
 ) {
     switch (int_number) {
-
+        case (PIC1_OFFSET + IRQ_KEYBOARD): // Keyboard
+            keyboard_isr();
+            break;
+        default:
+            break;
     }
 }
