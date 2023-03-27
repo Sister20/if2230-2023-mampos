@@ -19,7 +19,7 @@ struct IDT interrupt_descriptor_table = {
 struct IDTR _idt_idtr = {
     .limit = sizeof(struct IDT) - 1,
     // .base = interrupt_descriptor_table.table,
-    .base = &interrupt_descriptor_table.table[0]
+    .base = &interrupt_descriptor_table.table[1]
 };
 
 void initialize_idt(void)

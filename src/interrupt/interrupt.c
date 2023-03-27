@@ -54,10 +54,8 @@ void main_interrupt_handler(
     __attribute__((unused)) struct InterruptStack info
 ) {
     switch (int_number) {
-        case (IRQ_KEYBOARD + PIC1_OFFSET - 1): // Keyboard
+        case (PIC1_OFFSET + IRQ_KEYBOARD): // Keyboard
             keyboard_isr();
-            break;
-        default:
             break;
     }
 }

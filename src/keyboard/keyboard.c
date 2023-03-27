@@ -46,31 +46,47 @@ void keyboard_isr(void) {
         keyboard_state.buffer_index = 0;
     } 
     else {
-        uint8_t  scancode    = in(KEYBOARD_DATA_PORT);
-        char     mapped_char = keyboard_scancode_1_to_ascii_map[scancode];
-        uint8_t  cursor_x, cursor_y;
-        bool     process_scancode = TRUE;
+        uint8_t scancode = in(KEYBOARD_DATA_PORT);
+        char mapped_char = keyboard_scancode_1_to_ascii_map[scancode];
+        uint8_t cursor_x, cursor_y;
+        bool process_scancode = TRUE;
         if (mapped_char != 0) {
             switch (mapped_char) {
                 case '\n': // Enter key
                     keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
                     process_scancode = FALSE;
+                    keyboard_state_deactivate();
                     break;
                 case '\b': // Backspace key
+                    framebuffer_get_cursor(&cursor_x, &cursor_y);
                     if (keyboard_state.buffer_index > 0) {
                         keyboard_state.buffer_index--;
-                        framebuffer_get_cursor(&cursor_x, &cursor_y);
-                        framebuffer_set_cursor(cursor_x, cursor_y-1);
-                        framebuffer_write(cursor_x, cursor_y-1, ' ', 0x0F, 0x00);
-                        framebuffer_set_cursor(cursor_x, cursor_y-1);
+                        if (cursor_y == 0) {
+                            if (cursor_x > 0) {
+                                framebuffer_set_cursor(cursor_x-1, 79);
+                                framebuffer_write(cursor_x-1, 79, ' ', 0x0F, 0x00);
+                            }
+                        }
+                        else {
+                            framebuffer_set_cursor(cursor_x, cursor_y-1);
+                            framebuffer_write(cursor_x, cursor_y-1, ' ', 0x0F, 0x00);
+                        }
                     }
                     process_scancode = FALSE;
                     break;
                 default:
                     keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
                     framebuffer_get_cursor(&cursor_x, &cursor_y);
-                    framebuffer_write(cursor_x, cursor_y, mapped_char, 0x0F, 0x00);
-                    framebuffer_set_cursor(cursor_x, cursor_y+1);
+                    if (cursor_y == 79) {
+                        framebuffer_write(cursor_x, cursor_y, mapped_char, 0x0F, 0x00);
+                        framebuffer_set_cursor(cursor_x+1, 0);
+                        cursor_x++;
+                        cursor_y = 0;
+                    } else {
+                        framebuffer_write(cursor_x, cursor_y, mapped_char, 0x0F, 0x00);
+                        framebuffer_set_cursor(cursor_x, cursor_y+1);
+                        cursor_y++;
+                    }
                     break;
             }
         }
@@ -82,20 +98,38 @@ void keyboard_isr(void) {
         else if (process_scancode && keyboard_state.read_extended_mode) {
             switch (scancode) {
                 case EXT_SCANCODE_UP:
-                    //belom
-                    break;
-                case EXT_SCANCODE_DOWN:
-                    //belom
-                    break;
-                case EXT_SCANCODE_LEFT:
-                    //belom
-                    break;
-                case EXT_SCANCODE_RIGHT:
-                    //belom
-                    break;
-                default:
-
-                    break;
+                framebuffer_get_cursor(&cursor_x, &cursor_y);
+                if (cursor_x > 0) {
+                    framebuffer_set_cursor(cursor_x-1, cursor_y);
+                }
+                break;
+            case EXT_SCANCODE_DOWN:
+                // Handle down arrow key
+                // Example: move the cursor down one line
+                framebuffer_get_cursor(&cursor_x, &cursor_y);
+                if (cursor_x < 24) {
+                    framebuffer_set_cursor(cursor_x+1, cursor_y);
+                }
+                break;
+            case EXT_SCANCODE_LEFT:
+                // Handle left arrow key
+                // Example: move the cursor left one character
+                framebuffer_get_cursor(&cursor_x, &cursor_y);
+                if (cursor_y > 0) {
+                    framebuffer_set_cursor(cursor_x, cursor_y-1);
+                }
+                break;
+            case EXT_SCANCODE_RIGHT:
+                // Handle right arrow key
+                // Example: move the cursor right one character
+                framebuffer_get_cursor(&cursor_x, &cursor_y);
+                if (cursor_y < 79) {
+                    framebuffer_set_cursor(cursor_x, cursor_y+1);
+                }
+                break;
+            default:
+                // Ignore other extended scancodes
+                break;
             }
             keyboard_state.read_extended_mode = FALSE;
         }
