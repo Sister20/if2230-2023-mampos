@@ -16,6 +16,7 @@ CFLAGS        = $(DEBUG_CFLAG) $(WARNING_CFLAG) $(STRIP_CFLAG) -m32 -c -I$(SOURC
 AFLAGS        = -f elf32 -g -F dwarf
 LFLAGS        = -T $(SOURCE_FOLDER)/linker.ld -melf_i386
 
+DISK_NAME      = storage
 
 run: all
 	@qemu-system-i386 -s -cdrom $(OUTPUT_FOLDER)/$(ISO_NAME).iso
@@ -25,6 +26,8 @@ clean:
 	rm -rf *.o *.iso $(OUTPUT_FOLDER)/kernel
 
 
+disk:
+	@qemu-img create -f raw $(OUTPUT_FOLDER)/$(DISK_NAME).bin 4M
 
 kernel:
 	$(ASM) $(AFLAGS) $(SOURCE_FOLDER)/kernel_loader.s -o $(OUTPUT_FOLDER)/kernel_loader.o
@@ -37,7 +40,8 @@ kernel:
 	@$(CC) $(CFLAGS) src/stdmem.c -o bin/stdmem.o  
 	@$(CC) $(CFLAGS) src/interrupt/idt.c -o bin/idt.o 
 	@$(CC) $(CFLAGS) src/interrupt/interrupt.c -o bin/interrupt.o 
-	@$(CC) $(CFLAGS) src/keyboard/keyboard.c -o bin/keyboard.o 
+	@$(CC) $(CFLAGS) src/keyboard/keyboard.c -o bin/keyboard.o
+	@$(CC) $(CFLAGS) src/filesystem/disk.c -o bin/disk.o 
 	@$(LIN) $(LFLAGS) bin/*.o -o $(OUTPUT_FOLDER)/kernel
 	@echo Linking object files and generate elf32...
 	@rm -f *.o
