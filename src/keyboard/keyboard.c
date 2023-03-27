@@ -1,6 +1,6 @@
 #include "keyboard.h"
 
-struct KeyboardDriverState keyboard_state;
+static struct KeyboardDriverState keyboard_state;
 
 const char keyboard_scancode_1_to_ascii_map[256] = {
       0, 0x1B, '1', '2', '3', '4', '5', '6',  '7', '8', '9',  '0',  '-', '=', '\b', '\t',
@@ -42,11 +42,63 @@ bool is_keyboard_blocking(void) {
 }
 
 void keyboard_isr(void) {
-    if (!keyboard_state.keyboard_input_on)
-        framebuffer_write(0, 0, 'c', 0x0F, 0);
+    if (!keyboard_state.keyboard_input_on) {
+        keyboard_state.buffer_index = 0;
+    } 
     else {
-        framebuffer_write(0, 0, 'c', 0x0F, 0);
+        uint8_t  scancode    = in(KEYBOARD_DATA_PORT);
+        char     mapped_char = keyboard_scancode_1_to_ascii_map[scancode];
+        uint8_t  cursor_x, cursor_y;
+        bool     process_scancode = TRUE;
+        if (mapped_char != 0) {
+            switch (mapped_char) {
+                case '\n': // Enter key
+                    keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
+                    process_scancode = FALSE;
+                    break;
+                case '\b': // Backspace key
+                    if (keyboard_state.buffer_index > 0) {
+                        keyboard_state.buffer_index--;
+                        framebuffer_get_cursor(&cursor_x, &cursor_y);
+                        framebuffer_set_cursor(cursor_x, cursor_y-1);
+                        framebuffer_write(cursor_x, cursor_y-1, ' ', 0x0F, 0x00);
+                        framebuffer_set_cursor(cursor_x, cursor_y-1);
+                    }
+                    process_scancode = FALSE;
+                    break;
+                default:
+                    keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
+                    framebuffer_get_cursor(&cursor_x, &cursor_y);
+                    framebuffer_write(cursor_x, cursor_y, mapped_char, 0x0F, 0x00);
+                    framebuffer_set_cursor(cursor_x, cursor_y+1);
+                    break;
+            }
+        }
+        
+        // Process extended scancodes (arrow keys)
+        if (process_scancode && scancode == EXTENDED_SCANCODE_BYTE) {
+            keyboard_state.read_extended_mode = TRUE;
+        } 
+        else if (process_scancode && keyboard_state.read_extended_mode) {
+            switch (scancode) {
+                case EXT_SCANCODE_UP:
+                    //belom
+                    break;
+                case EXT_SCANCODE_DOWN:
+                    //belom
+                    break;
+                case EXT_SCANCODE_LEFT:
+                    //belom
+                    break;
+                case EXT_SCANCODE_RIGHT:
+                    //belom
+                    break;
+                default:
+
+                    break;
+            }
+            keyboard_state.read_extended_mode = FALSE;
+        }
     }
-    framebuffer_write(0, 0, 'c', 0x0F, 0);
     pic_ack(IRQ_KEYBOARD);
 }
