@@ -50,46 +50,102 @@ void keyboard_isr(void) {
         char mapped_char = keyboard_scancode_1_to_ascii_map[scancode];
         uint8_t cursor_x, cursor_y;
         bool process_scancode = TRUE;
-        if (mapped_char != 0) {
-            switch (mapped_char) {
-                case '\n': // Enter key
-                    keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
-                    process_scancode = FALSE;
-                    keyboard_state_deactivate();
-                    break;
-                case '\b': // Backspace key
-                    framebuffer_get_cursor(&cursor_x, &cursor_y);
-                    if (keyboard_state.buffer_index > 0) {
-                        keyboard_state.buffer_index--;
-                        if (cursor_y == 0) {
-                            if (cursor_x > 0) {
-                                framebuffer_set_cursor(cursor_x-1, 79);
-                                framebuffer_write(cursor_x-1, 79, ' ', 0x0F, 0x00);
+        static bool last_key_pressed = FALSE;
+        static uint8_t last_scancode = 0;
+       // Check if scancode is a valid key and not a repeated key
+        if (mapped_char != 0 && scancode != last_scancode) {
+            // Check if the key is being pressed or released
+            bool key_pressed = scancode & 0x80 ? FALSE : TRUE;
+            // Check if it's a make or break code
+            bool make_code = key_pressed ? TRUE : FALSE;
+            
+            // Check if the key is the same as the last one and hasn't been released
+            if (scancode == last_scancode && !last_key_pressed) {
+                // Ignore repeated make codes
+                if (make_code) {
+                    pic_ack(IRQ_KEYBOARD);
+                    return;
+                }
+            } else {
+                // Add the key to the buffer if it's a make code
+                if (make_code) {
+                    // switch (mapped_char) {
+                    //     case '\n': // Enter key
+                    //         keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
+                    //         framebuffer_get_cursor(&cursor_x, &cursor_y);
+                    //         if (cursor_y == 79) {
+                    //             framebuffer_set_cursor(cursor_y+1, 0);
+                    //             cursor_y++;
+                    //             cursor_x = 0;
+                    //         } else {
+                    //             framebuffer_set_cursor(cursor_x, cursor_y+1);
+                    //             cursor_y++;
+                    //         }
+                    //         process_scancode = FALSE;
+                    //         keyboard_state_deactivate();
+                    //         break;
+                    //     case '\b': // Backspace key
+                    //         framebuffer_get_cursor(&cursor_x, &cursor_y);
+                    //         if (keyboard_state.buffer_index > 0) {
+                    //             keyboard_state.buffer_index--;
+                    //             if (cursor_y == 0) {
+                    //                 if (cursor_x > 0) {
+                    //                     framebuffer_set_cursor(cursor_x-1, 79);
+                    //                     framebuffer_write(cursor_x-1, 79, ' ', 0x0F, 0x00);
+                    //                 }
+                    //             }
+                    //             else {
+                    //                 framebuffer_set_cursor(cursor_x, cursor_y-1);
+                    //                 framebuffer_write(cursor_x, cursor_y-1, ' ', 0x0F, 0x00);
+                    //             }
+                    //         }
+                    //         process_scancode = FALSE;
+                    //         break;
+                    //     default:
+                            keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
+                            framebuffer_get_cursor(&cursor_x, &cursor_y);
+                            if (cursor_y == 79) {
+                                framebuffer_write(cursor_x, cursor_y, mapped_char, 0x0F, 0x00);
+                                framebuffer_set_cursor(cursor_x+1, 0);
+                                cursor_x++;
+                                cursor_y = 0;
+                            } else {
+                                framebuffer_write(cursor_x, cursor_y, mapped_char, 0x0F, 0x00);
+                                framebuffer_set_cursor(cursor_x, cursor_y+1);
+                                cursor_y++;
                             }
-                        }
-                        else {
-                            framebuffer_set_cursor(cursor_x, cursor_y-1);
-                            framebuffer_write(cursor_x, cursor_y-1, ' ', 0x0F, 0x00);
-                        }
-                    }
-                    process_scancode = FALSE;
-                    break;
-                default:
-                    keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
-                    framebuffer_get_cursor(&cursor_x, &cursor_y);
-                    if (cursor_y == 79) {
-                        framebuffer_write(cursor_x, cursor_y, mapped_char, 0x0F, 0x00);
-                        framebuffer_set_cursor(cursor_x+1, 0);
-                        cursor_x++;
-                        cursor_y = 0;
-                    } else {
-                        framebuffer_write(cursor_x, cursor_y, mapped_char, 0x0F, 0x00);
-                        framebuffer_set_cursor(cursor_x, cursor_y+1);
-                        cursor_y++;
-                    }
-                    break;
+                            // break;
+                    // }
+                }
             }
+            
+            // Remember the last key and its state
+            last_scancode = scancode;
+            last_key_pressed = key_pressed;
         }
+        
+        if (mapped_char == '\n') {
+            keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
+            process_scancode = FALSE;
+            keyboard_state_deactivate();
+        } // Enter key
+        else if (mapped_char == '\b') {
+            framebuffer_get_cursor(&cursor_x, &cursor_y);
+            if (keyboard_state.buffer_index > 0) {
+                keyboard_state.buffer_index--;
+                if (cursor_y == 0) {
+                    if (cursor_x > 0) {
+                        framebuffer_set_cursor(cursor_x-1, 79);
+                        framebuffer_write(cursor_x-1, 79, ' ', 0x0F, 0x00);
+                    }
+                }
+                else {
+                    framebuffer_set_cursor(cursor_x, cursor_y-1);
+                    framebuffer_write(cursor_x, cursor_y-1, ' ', 0x0F, 0x00);
+                }
+            }
+            process_scancode = FALSE;
+        } // Backspace key
         
         // Process extended scancodes (arrow keys)
         if (process_scancode && scancode == EXTENDED_SCANCODE_BYTE) {
