@@ -41,7 +41,8 @@ kernel:
 	@$(CC) $(CFLAGS) src/interrupt/idt.c -o bin/idt.o 
 	@$(CC) $(CFLAGS) src/interrupt/interrupt.c -o bin/interrupt.o 
 	@$(CC) $(CFLAGS) src/keyboard/keyboard.c -o bin/keyboard.o
-	@$(CC) $(CFLAGS) src/filesystem/disk.c -o bin/disk.o 
+	@$(CC) $(CFLAGS) src/filesystem/disk.c -o bin/disk.o
+	@$(CC) $(CFLAGS) src/filesystem/fat32.c -o bin/fat32.o
 	@$(LIN) $(LFLAGS) bin/*.o -o $(OUTPUT_FOLDER)/kernel
 	@echo Linking object files and generate elf32...
 	@rm -f *.o

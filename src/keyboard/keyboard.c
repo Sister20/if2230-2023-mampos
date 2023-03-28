@@ -104,31 +104,24 @@ void keyboard_isr(void) {
                 }
                 break;
             case EXT_SCANCODE_DOWN:
-                // Handle down arrow key
-                // Example: move the cursor down one line
                 framebuffer_get_cursor(&cursor_x, &cursor_y);
                 if (cursor_x < 24) {
                     framebuffer_set_cursor(cursor_x+1, cursor_y);
                 }
                 break;
             case EXT_SCANCODE_LEFT:
-                // Handle left arrow key
-                // Example: move the cursor left one character
                 framebuffer_get_cursor(&cursor_x, &cursor_y);
                 if (cursor_y > 0) {
                     framebuffer_set_cursor(cursor_x, cursor_y-1);
                 }
                 break;
             case EXT_SCANCODE_RIGHT:
-                // Handle right arrow key
-                // Example: move the cursor right one character
                 framebuffer_get_cursor(&cursor_x, &cursor_y);
                 if (cursor_y < 79) {
                     framebuffer_set_cursor(cursor_x, cursor_y+1);
                 }
                 break;
             default:
-                // Ignore other extended scancodes
                 break;
             }
             keyboard_state.read_extended_mode = FALSE;
