@@ -7,6 +7,7 @@
 #include "interrupt/idt.h"
 #include "interrupt/interrupt.h"
 #include "keyboard/keyboard.h"
+#include "filesystem/fat32.h"
 
 void kernel_setup(void)
 {
@@ -14,6 +15,7 @@ void kernel_setup(void)
     enter_protected_mode(&_gdt_gdtr);
     pic_remap();
     initialize_idt();
+    create_fat32();
     framebuffer_clear();
     framebuffer_set_cursor(0, 0);
     while (TRUE) {
