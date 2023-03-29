@@ -322,6 +322,17 @@ void keyboard_isr(void)
                         framebuffer_set_cursor(cursor_x, cursor_y - 1);
                         framebuffer_write(cursor_x, cursor_y - 1, ' ', 0x0F, 0x00);
                     }
+                    if (cursor_y == 0) 
+                    {
+                        if (cursor_x > 0)
+                        {
+                            keyboard_state.keyboard_buffer[keyboard_state.buffer_index] = 0;
+                            keyboard_state.buffer_index--;
+                            framebuffer_set_cursor(cursor_x-1, 79);
+                            framebuffer_write(cursor_x-1, 79, ' ', 0x0F, 0x00);
+
+                        } 
+                    }
                 }
             }
 
@@ -342,6 +353,39 @@ void keyboard_isr(void)
                 last_mapped_char = 0;
             }
             make_code = FALSE;
+        }
+        // Arrow
+        else if (scancode == EXT_SCANCODE_UP)
+        {
+            framebuffer_get_cursor(&cursor_x, &cursor_y);
+            if (cursor_x > 0) {
+                framebuffer_set_cursor(cursor_x-1, cursor_y);
+            }
+        }
+        else if (scancode == EXT_SCANCODE_DOWN)
+        {
+            framebuffer_get_cursor(&cursor_x, &cursor_y);
+            if (cursor_x < 24) {
+                framebuffer_set_cursor(cursor_x+1, cursor_y);
+            }
+        }
+        else if (scancode == EXT_SCANCODE_LEFT)
+        {
+            framebuffer_get_cursor(&cursor_x, &cursor_y);
+            if (cursor_y > 0) {
+                framebuffer_set_cursor(cursor_x, cursor_y-1);
+            } else {
+                if(cursor_x > 0) {
+                    framebuffer_set_cursor(cursor_x-1, 79);
+                }
+            }
+        }
+        else if (scancode == EXT_SCANCODE_RIGHT)
+        {
+            framebuffer_get_cursor(&cursor_x, &cursor_y);
+            if (cursor_y < 79) {
+                framebuffer_set_cursor(cursor_x, cursor_y+1);
+            }
         }
     }
 
