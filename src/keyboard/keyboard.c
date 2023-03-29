@@ -121,7 +121,9 @@ void keyboard_isr(void) {
             
             // Remember the last key and its state
             last_scancode = scancode;
-            last_key_pressed = key_pressed;
+            if (key_pressed){
+                last_key_pressed = TRUE;
+            }
         }
         
         if (mapped_char == '\n') {
