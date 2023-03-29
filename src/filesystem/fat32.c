@@ -14,6 +14,14 @@ const uint8_t fs_signature[BLOCK_SIZE] = {
     [BLOCK_SIZE-1] = 'k',
 };
 
+uint32_t find_empty_cluster(void) {
+    for (int i = 3; i < CLUSTER_MAP_SIZE; i++) {
+        if (fs_state.fat_table.cluster_map[i] == FAT32_FAT_EMPTY_ENTRY) {
+            return i;
+        }
+    }
+    return 0;
+}
 
 
 uint32_t cluster_to_lba(uint32_t cluster) {
@@ -36,7 +44,7 @@ void init_directory_table(struct FAT32DirectoryTable *dir_table, char *name, uin
 
 bool is_empty_storage(void) {
     read_clusters(fs_state.cluster_buf.buf, BOOT_SECTOR, 1);
-    return !memcmp(fs_state.cluster_buf.buf, fs_signature, BLOCK_SIZE);
+    return memcmp(fs_state.cluster_buf.buf, fs_signature, BLOCK_SIZE);
 }
 
 
@@ -77,4 +85,63 @@ void write_clusters(const void *ptr, uint32_t cluster_number, uint8_t cluster_co
 
 void read_clusters(void *ptr, uint32_t cluster_number, uint8_t cluster_count) {
     read_blocks(ptr, cluster_to_lba(cluster_number), cluster_count*CLUSTER_BLOCK_COUNT);
+}
+
+int8_t write(struct FAT32DriverRequest request) {
+    // check if parent cluster is valid
+    if (
+    request.parent_cluster_number > CLUSTER_MAP_SIZE 
+    || fs_state.fat_table.cluster_map[request.parent_cluster_number] == FAT32_FAT_EMPTY_ENTRY
+    || fs_state.dir_table_buf.table[request.parent_cluster_number].ext == 0x00) 
+    {
+        return 2;
+    }
+
+    // Check if the file is already exist
+    for (int i = 0; i < CLUSTER_MAP_SIZE; i++) {
+        if (fs_state.fat_table.cluster_map[i] != FAT32_FAT_EMPTY_ENTRY) {
+            if (request.name == fs_state.dir_table_buf.table[i].name
+            && request.ext == fs_state.dir_table_buf.table[i].ext)
+            {
+                return 1;
+            }
+        }
+    }
+
+    // // Find an empty directory entry
+    // int8_t empty_dir_entry = -1;
+    // for (int i = 0; i < MAX_FILE_COUNT; i++) {
+    //     if (fs_state.dir_table_buf.table[i].name[0] == 0x00) {
+    //         empty_dir_entry = i;
+    //         break;
+    //     }
+    // }
+    // if (empty_dir_entry == -1) {
+    //     return -1;
+    // }
+
+    // Find an empty cluster
+    uint32_t empty_cluster = find_empty_cluster();
+    if (empty_cluster == 0) {
+        return -1;
+    }
+    // Update the directory entry
+    memcpy(fs_state.dir_table_buf.table[empty_cluster].name, request.name, 8);
+    // memcpy(fs_state.dir_table_buf.table[empty_cluster].ext, request.ext, 3);
+    fs_state.dir_table_buf.table[empty_cluster].user_attribute = UATTR_NOT_EMPTY;
+    fs_state.dir_table_buf.table[empty_cluster].attribute = ATTR_SUBDIRECTORY;
+    fs_state.dir_table_buf.table[empty_cluster].cluster_high = (uint16_t) (empty_cluster >> 16);
+    fs_state.dir_table_buf.table[empty_cluster].cluster_low = (uint16_t) (empty_cluster & 0xFFFF);
+    fs_state.dir_table_buf.table[empty_cluster].filesize = request.buffer_size;
+
+    // Update the FAT table
+    fs_state.fat_table.cluster_map[empty_cluster] = empty_cluster;
+
+    // Write the file into the empty cluster
+    write_clusters(&request, empty_cluster, 1);
+
+    // Write the updated directory entry and FAT table into the storage
+    write_clusters(fs_state.dir_table_buf.table, ROOT_CLUSTER_NUMBER, 1);
+    write_clusters(fs_state.fat_table.cluster_map, FAT_CLUSTER_NUMBER, 1);
+    return 0;
 }

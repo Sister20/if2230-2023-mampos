@@ -204,7 +204,13 @@ void read_clusters(void *ptr, uint32_t cluster_number, uint8_t cluster_count);
 
 
 
+/* -- CRUD Helper -- */
 
+/**
+ *dirtable linear serach, search an empty cluster
+ * @return an empty cluster
+ */
+uint32_t find_empty_cluster(void);
 
 /* -- CRUD Operation -- */
 
@@ -219,7 +225,6 @@ void read_clusters(void *ptr, uint32_t cluster_number, uint8_t cluster_count);
  * @return Error code: 0 success - 1 not a folder - 2 not found - -1 unknown
  */
 int8_t read_directory(struct FAT32DriverRequest request);
-
 
 /**
  * FAT32 read, read a file from file system.
