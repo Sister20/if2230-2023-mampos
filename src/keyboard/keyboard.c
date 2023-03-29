@@ -3,187 +3,347 @@
 static struct KeyboardDriverState keyboard_state;
 
 const char keyboard_scancode_1_to_ascii_map[256] = {
-      0, 0x1B, '1', '2', '3', '4', '5', '6',  '7', '8', '9',  '0',  '-', '=', '\b', '\t',
-    'q',  'w', 'e', 'r', 't', 'y', 'u', 'i',  'o', 'p', '[',  ']', '\n',   0,  'a',  's',
-    'd',  'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',   0, '\\',  'z', 'x',  'c',  'v',
-    'b',  'n', 'm', ',', '.', '/',   0, '*',    0, ' ',   0,    0,    0,   0,    0,    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0, '-',    0,    0,   0,  '+',    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
-
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
-      0,    0,   0,   0,   0,   0,   0,   0,    0,   0,   0,    0,    0,   0,    0,    0,
+    0,
+    0x1B,
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '0',
+    '-',
+    '=',
+    '\b',
+    '\t',
+    'q',
+    'w',
+    'e',
+    'r',
+    't',
+    'y',
+    'u',
+    'i',
+    'o',
+    'p',
+    '[',
+    ']',
+    '\n',
+    'X',
+    'a',
+    's',
+    'd',
+    'f',
+    'g',
+    'h',
+    'j',
+    'k',
+    'l',
+    ';',
+    '\'',
+    '`',
+    'X',
+    '\\',
+    'z',
+    'x',
+    'c',
+    'v',
+    'b',
+    'n',
+    'm',
+    ',',
+    '.',
+    '/',
+    0,
+    '*',
+    0,
+    ' ',
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    '-',
+    0,
+    0,
+    0,
+    '+',
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0, // default
+    0,
+    0,
+    0,
+    0,
+    0,
 };
 
-void keyboard_state_activate(void) {
+void keyboard_state_activate(void)
+{
     keyboard_state.keyboard_input_on = TRUE;
 }
 
 // Deactivate keyboard ISR / stop listening keyboard interrupt
-void keyboard_state_deactivate(void) {
+void keyboard_state_deactivate(void)
+{
     keyboard_state.keyboard_input_on = FALSE;
 }
 
 // Get keyboard buffer values - @param buf Pointer to char buffer, recommended size at least KEYBOARD_BUFFER_SIZE
-void get_keyboard_buffer(char *buf) {
+void get_keyboard_buffer(char *buf)
+{
     memcpy(buf, keyboard_state.keyboard_buffer, KEYBOARD_BUFFER_SIZE);
 }
 
 // Check whether keyboard ISR is active or not - @return Equal with keyboard_input_on value
-bool is_keyboard_blocking(void) {
+bool is_keyboard_blocking(void)
+{
     return keyboard_state.keyboard_input_on;
 }
 
-void keyboard_isr(void) {
-    if (!keyboard_state.keyboard_input_on) {
+void keyboard_isr(void)
+{
+
+    uint8_t cursor_x, cursor_y;
+    uint8_t scancode = in(KEYBOARD_DATA_PORT);
+    char mapped_char = keyboard_scancode_1_to_ascii_map[scancode];
+    static char last_mapped_char = 0;
+    static bool make_code = FALSE;
+
+    if (!is_keyboard_blocking())
+    {
         keyboard_state.buffer_index = 0;
-    } 
-    else {
-        uint8_t scancode = in(KEYBOARD_DATA_PORT);
-        char mapped_char = keyboard_scancode_1_to_ascii_map[scancode];
-        uint8_t cursor_x, cursor_y;
-        bool process_scancode = TRUE;
-        static bool last_key_pressed = FALSE;
-        static uint8_t last_scancode = 0;
-       // Check if scancode is a valid key and not a repeated key
-        if (mapped_char != 0 && scancode != last_scancode) {
-            // Check if the key is being pressed or released
-            bool key_pressed = scancode & 0x80 ? FALSE : TRUE;
-            // Check if it's a make or break code
-            bool make_code = key_pressed ? TRUE : FALSE;
-            
-            // Check if the key is the same as the last one and hasn't been released
-            if (scancode == last_scancode && !last_key_pressed) {
-                // Ignore repeated make codes
-                if (make_code) {
-                    pic_ack(IRQ_KEYBOARD);
-                    return;
-                }
-            } else {
-                // Add the key to the buffer if it's a make code
-                if (make_code) {
-                    // switch (mapped_char) {
-                    //     case '\n': // Enter key
-                    //         keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
-                    //         framebuffer_get_cursor(&cursor_x, &cursor_y);
-                    //         if (cursor_y == 79) {
-                    //             framebuffer_set_cursor(cursor_y+1, 0);
-                    //             cursor_y++;
-                    //             cursor_x = 0;
-                    //         } else {
-                    //             framebuffer_set_cursor(cursor_x, cursor_y+1);
-                    //             cursor_y++;
-                    //         }
-                    //         process_scancode = FALSE;
-                    //         keyboard_state_deactivate();
-                    //         break;
-                    //     case '\b': // Backspace key
-                    //         framebuffer_get_cursor(&cursor_x, &cursor_y);
-                    //         if (keyboard_state.buffer_index > 0) {
-                    //             keyboard_state.buffer_index--;
-                    //             if (cursor_y == 0) {
-                    //                 if (cursor_x > 0) {
-                    //                     framebuffer_set_cursor(cursor_x-1, 79);
-                    //                     framebuffer_write(cursor_x-1, 79, ' ', 0x0F, 0x00);
-                    //                 }
-                    //             }
-                    //             else {
-                    //                 framebuffer_set_cursor(cursor_x, cursor_y-1);
-                    //                 framebuffer_write(cursor_x, cursor_y-1, ' ', 0x0F, 0x00);
-                    //             }
-                    //         }
-                    //         process_scancode = FALSE;
-                    //         break;
-                    //     default:
-                            keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
-                            framebuffer_get_cursor(&cursor_x, &cursor_y);
-                            if (cursor_y == 79) {
-                                framebuffer_write(cursor_x, cursor_y, mapped_char, 0x0F, 0x00);
-                                framebuffer_set_cursor(cursor_x+1, 0);
-                                cursor_x++;
-                                cursor_y = 0;
-                            } else {
-                                framebuffer_write(cursor_x, cursor_y, mapped_char, 0x0F, 0x00);
-                                framebuffer_set_cursor(cursor_x, cursor_y+1);
-                                cursor_y++;
-                            }
-                            // break;
-                    // }
-                }
-            }
-            
-            // Remember the last key and its state
-            last_scancode = scancode;
-            if (key_pressed){
-                last_key_pressed = TRUE;
-            }
+    }
+    else
+    {
+        // Register mapped character when pressed
+        if (mapped_char != 0)
+        {
+            make_code = TRUE;
+            last_mapped_char = mapped_char;
         }
-        
-        if (mapped_char == '\n') {
-            keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = mapped_char;
-            process_scancode = FALSE;
-            keyboard_state_deactivate();
-        } // Enter key
-        else if (mapped_char == '\b') {
+        // Put mapped character in buffer after release
+        else if (make_code)
+        {
             framebuffer_get_cursor(&cursor_x, &cursor_y);
-            if (keyboard_state.buffer_index > 0) {
-                keyboard_state.buffer_index--;
-                if (cursor_y == 0) {
-                    if (cursor_x > 0) {
-                        framebuffer_set_cursor(cursor_x-1, 79);
-                        framebuffer_write(cursor_x-1, 79, ' ', 0x0F, 0x00);
+
+            // Backspace
+            if (last_mapped_char == '\b')
+            {
+                if (keyboard_state.buffer_index > 0)
+                {
+                    if (cursor_y != 0)
+                    {
+                        keyboard_state.keyboard_buffer[keyboard_state.buffer_index] = 0;
+                        keyboard_state.buffer_index--;
+                        framebuffer_set_cursor(cursor_x, cursor_y - 1);
+                        framebuffer_write(cursor_x, cursor_y - 1, ' ', 0x0F, 0x00);
                     }
                 }
-                else {
-                    framebuffer_set_cursor(cursor_x, cursor_y-1);
-                    framebuffer_write(cursor_x, cursor_y-1, ' ', 0x0F, 0x00);
-                }
             }
-            process_scancode = FALSE;
-        } // Backspace key
-        
-        // Process extended scancodes (arrow keys)
-        if (process_scancode && scancode == EXTENDED_SCANCODE_BYTE) {
-            keyboard_state.read_extended_mode = TRUE;
-        } 
-        else if (process_scancode && keyboard_state.read_extended_mode) {
-            switch (scancode) {
-                case EXT_SCANCODE_UP:
-                framebuffer_get_cursor(&cursor_x, &cursor_y);
-                if (cursor_x > 0) {
-                    framebuffer_set_cursor(cursor_x-1, cursor_y);
-                }
-                break;
-            case EXT_SCANCODE_DOWN:
-                framebuffer_get_cursor(&cursor_x, &cursor_y);
-                if (cursor_x < 24) {
-                    framebuffer_set_cursor(cursor_x+1, cursor_y);
-                }
-                break;
-            case EXT_SCANCODE_LEFT:
-                framebuffer_get_cursor(&cursor_x, &cursor_y);
-                if (cursor_y > 0) {
-                    framebuffer_set_cursor(cursor_x, cursor_y-1);
-                }
-                break;
-            case EXT_SCANCODE_RIGHT:
-                framebuffer_get_cursor(&cursor_x, &cursor_y);
-                if (cursor_y < 79) {
-                    framebuffer_set_cursor(cursor_x, cursor_y+1);
-                }
-                break;
-            default:
-                break;
+
+            // Enter
+            else if (last_mapped_char == '\n')
+            {
+                keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = last_mapped_char;
+                framebuffer_set_cursor(cursor_x + 1, 0);
+                keyboard_state_deactivate();
             }
-            keyboard_state.read_extended_mode = FALSE;
+
+            // Character
+            else if (last_mapped_char != 0)
+            {
+                keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = last_mapped_char;
+                framebuffer_write(cursor_x, cursor_y, last_mapped_char, 0x0F, 0x00);
+                framebuffer_set_cursor(cursor_x, cursor_y + 1);
+                last_mapped_char = 0;
+            }
+            make_code = FALSE;
         }
     }
+
     pic_ack(IRQ_KEYBOARD);
 }
