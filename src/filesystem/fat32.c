@@ -265,8 +265,8 @@ int8_t write(struct FAT32DriverRequest request)
         new_entry.attribute = ATTR_SUBDIRECTORY;
     }
     new_entry.user_attribute = UATTR_NOT_EMPTY;
-    new_entry.cluster_high = (uint16_t)(cluster_to_lba(request.parent_cluster_number) >> 16) & 0xFFFF;
-    new_entry.cluster_low = (uint16_t)(cluster_to_lba(request.parent_cluster_number) & 0xFFFF);
+    new_entry.cluster_high = (uint16_t)(empty_cluster_number) >> 16;
+    new_entry.cluster_low = (uint16_t)(empty_cluster_number)&0xFFFF;
     new_entry.filesize = request.buffer_size;
 
     // update parent directory entry
@@ -369,17 +369,17 @@ int8_t delete(struct FAT32DriverRequest request)
     {
         if (memcmp(fs_state.dir_table_buf.table[i].name, request.name, 8) == 0 && memcmp(fs_state.dir_table_buf.table[i].ext, request.ext, 3) == 0)
         {
-            entry_cluster = (fs_state.dir_table_buf.table[i].cluster_high << 16) | fs_state.dir_table_buf.table[i].cluster_low;
-            memcpy(fs_state.dir_table_buf.table[i].name, "\0\0\0\0\0\0\0\0", 8);
-            memcpy(fs_state.dir_table_buf.table[i].ext, "\0\0\0", 3);
-            fs_state.dir_table_buf.table[i].user_attribute = 0x00;
+            entry_cluster = (uint32_t)fs_state.dir_table_buf.table[i].cluster_high << 16 | (uint32_t)fs_state.dir_table_buf.table[i].cluster_low;
+            // entry_cluster = (fs_state.dir_table_buf.table[i].cluster_high << 16) | fs_state.dir_table_buf.table[i].cluster_low;
+            struct FAT32DirectoryEntry new_entry = {0};
+            fs_state.dir_table_buf.table[i] = new_entry;
             break;
         }
     }
 
     if (is_dir && !is_dir_empty(entry_cluster))
     {
-        return 2;
+        // return 2;
     }
 
     // delete from parent dir table
