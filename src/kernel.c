@@ -31,11 +31,20 @@ void kernel_setup(void)
         .name = "ikanaide",
         .ext = "uwu",
         .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size = 0,
+        .buffer_size = 25,
     };
+
+    // struct FAT32DriverRequest request2 = {
+    //     .buf = 0,
+    //     .name = "ikanaide",
+    //     .ext = "uwu",
+    //     .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+    //     .buffer_size = 25,
+    // };
 
     write(request);
     delete (request);
+    // read(request2);
     // memcpy(request.name, "kano1\0\0\0", 8);
     // write(request);  // Create folder "kano1"
     //   memcpy(request.name, "ikanaide", 8);
