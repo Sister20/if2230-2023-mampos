@@ -2,7 +2,7 @@
 #include "fat32.h"
 #include "../lib-header/stdmem.h"
 
-struct FAT32DriverState fs_state;
+struct FAT32DriverState fs_state = {0};
 
 const uint8_t fs_signature[BLOCK_SIZE] = {
     'C',
@@ -230,13 +230,13 @@ int8_t write(struct FAT32DriverRequest request)
     if (request.buffer_size == 0) // directory
     {
         // create new entry
-        struct FAT32DirectoryEntry new_entry;
+        struct FAT32DirectoryEntry new_entry = {0};
         memset(new_entry.name, 0, 8);
         memcpy(new_entry.name, request.name, 8);
         memset(new_entry.ext, 0, 3);
         new_entry.attribute = ATTR_SUBDIRECTORY;
         new_entry.user_attribute = UATTR_NOT_EMPTY;
-        new_entry.cluster_high = (uint16_t)(cluster_to_lba(request.parent_cluster_number) >> 16);
+        new_entry.cluster_high = (uint16_t)(cluster_to_lba(request.parent_cluster_number) >> 16) & 0xFFFF;
         new_entry.cluster_low = (uint16_t)(cluster_to_lba(request.parent_cluster_number) & 0xFFFF);
         new_entry.filesize = 0;
 
@@ -268,14 +268,14 @@ int8_t write(struct FAT32DriverRequest request)
     else // file
     {
         // create new entry
-        struct FAT32DirectoryEntry new_entry;
+        struct FAT32DirectoryEntry new_entry = {0};
         memset(new_entry.name, 0, 8);
         memcpy(new_entry.name, request.name, 8);
         memset(new_entry.ext, 0, 3);
         memcpy(new_entry.ext, request.ext, 3);
         new_entry.attribute = 0;
         new_entry.user_attribute = UATTR_NOT_EMPTY;
-        new_entry.cluster_high = (uint16_t)(cluster_to_lba(request.parent_cluster_number) >> 16);
+        new_entry.cluster_high = (uint16_t)(cluster_to_lba(request.parent_cluster_number) >> 16) & 0xFFFF;
         new_entry.cluster_low = (uint16_t)(cluster_to_lba(request.parent_cluster_number) & 0xFFFF);
         new_entry.filesize = request.buffer_size;
 
@@ -372,3 +372,37 @@ int8_t write(struct FAT32DriverRequest request)
     // write_clusters(fs_state.fat_table.cluster_map, FAT_CLUSTER_NUMBER, 1);
     // return 0;
 }
+
+// int32_t fat32_read_file(struct fat32_read_file_request request)
+// {
+//     // check if parent cluster is valid
+//     if (request.parent_cluster_number > CLUSTER_MAP_SIZE || fs_state.fat_table.cluster_map[request.parent_cluster_number] == FAT32_FAT_EMPTY_ENTRY || fs_state.dir_table_buf.table[request.parent_cluster_number].ext == 0x00)
+//     {
+//         return 2;
+//     }
+
+//     // check if file is exist
+//     uint32_t file_cluster_number = 0;
+//     for (uint32_t i = 0; i < CLUSTER_MAP_SIZE; i++)
+//     {
+//         if (fs_state.fat_table.cluster_map[i] != FAT32_FAT_EMPTY_ENTRY)
+//         {
+//             if (request.name == fs_state.dir_table_buf.table[i].name && request.ext == fs_state.dir_table_buf.table[i].ext)
+//             {
+//                 file_cluster_number = i;
+//                 break;
+//             }
+//         }
+//     }
+//     if (file_cluster_number == 0)
+//     {
+//         return 1;
+//     }
+
+//     // read file
+//     memset(&fs_state.cluster_buf, 0, CLUSTER_SIZE);
+//     read_clusters(&fs_state.cluster_buf, file_cluster_number, 1);
+//     memcpy(request.buf, &fs_state.cluster_buf, request.buffer_size);
+
+//     return 0;
+// }
