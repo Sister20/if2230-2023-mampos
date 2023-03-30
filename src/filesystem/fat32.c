@@ -348,7 +348,7 @@ int8_t delete(struct FAT32DriverRequest request)
     }
 
     // check is the file exist
-    if (file_exist(request))
+    if (!file_exist(request))
     {
         return 1;
     }
