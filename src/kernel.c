@@ -31,7 +31,7 @@ void kernel_setup(void)
         .name = "ikanaide",
         .ext = "uwu",
         .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size = 25,
+        .buffer_size = 0,
     };
 
     // struct FAT32DriverRequest request2 = {
