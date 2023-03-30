@@ -11,50 +11,106 @@
 
 void kernel_setup(void)
 {
-    // Milestone 2 (Gak bisa jalan di laptop ditra)
     enter_protected_mode(&_gdt_gdtr);
-    pic_remap();
-    initialize_idt();
-    activate_keyboard_interrupt();
-    framebuffer_clear();
-    framebuffer_set_cursor(0, 0);
-    initialize_filesystem_fat32();
-    keyboard_state_activate();
+pic_remap();
+initialize_idt();
+activate_keyboard_interrupt();
+framebuffer_clear();
+framebuffer_set_cursor(0, 0);
+initialize_filesystem_fat32();
+keyboard_state_activate();
 
-    struct ClusterBuffer cbuf[5];
-    for (uint32_t i = 0; i < 5; i++)
-        for (uint32_t j = 0; j < CLUSTER_SIZE; j++)
-            cbuf[i].buf[j] = i + 'a';
+struct ClusterBuffer cbuf[5];
+for (uint32_t i = 0; i < 5; i++)
+for (uint32_t j = 0; j < CLUSTER_SIZE; j++)
+cbuf[i].buf[j] = i + 'a';
 
-    struct FAT32DriverRequest request = {
-        .buf = cbuf,
-        .name = "ikanaide",
-        .ext = "uwu",
-        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size = 0,
-    };
+struct FAT32DriverRequest request = {
+.buf = cbuf,
+.name = "ikanaide",
+.ext = "uwu",
+.parent_cluster_number = ROOT_CLUSTER_NUMBER,
+.buffer_size = 0,
+} ;
 
-    write(request);
+write(request); // Create folder "ikanaide"
+memcpy(request.name, "kano1\0\0\0", 8);
+write(request); // Create folder "kano1"
+memcpy(request.name, "ikanaide", 8);
+memcpy(request.ext, "\0\0\0", 3);
+delete(request); // Delete first folder, thus creating hole in FS
 
-    struct FAT32DriverRequest request2 = {
-        .buf = cbuf,
-        .name = "kanol",
-        .ext = "txt",
-        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size = 25,
-    };
+memcpy(request.name, "daijoubu", 8);
+request.buffer_size = 5*CLUSTER_SIZE;
+write(request); // Create fragmented file "daijoubu"
 
-    write(request2);
+struct ClusterBuffer readcbuf;
+read_clusters(&readcbuf, ROOT_CLUSTER_NUMBER+1, 1);
+// If read properly, readcbuf should filled with 'a'
 
-    struct FAT32DriverRequest request3 = {
-        .buf = cbuf,
-        .name = "ikanemas",
-        .ext = "exe",
-        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size = 0,
-    };
+request.buffer_size = CLUSTER_SIZE;
+read(request); // Failed read due not enough buffer size
+request.buffer_size = 5*CLUSTER_SIZE;
+read(request); // Success read on file "daijoubu"
 
-    write(request3); // Create folder "ikanaide"
+while (TRUE);
+}
+    // Milestone 2 (Gak bisa jalan di laptop ditra)
+    // enter_protected_mode(&_gdt_gdtr);
+    // pic_remap();
+    // initialize_idt();
+    // activate_keyboard_interrupt();
+    // framebuffer_clear();
+    // framebuffer_set_cursor(0, 0);
+    // initialize_filesystem_fat32();
+    // keyboard_state_activate();
+
+    // struct ClusterBuffer cbuf[5];
+    // for (uint32_t i = 0; i < 5; i++)
+    //     for (uint32_t j = 0; j < CLUSTER_SIZE; j++)
+    //         cbuf[i].buf[j] = i + 'a';
+
+    // struct FAT32DriverRequest request = {
+    //     .buf = cbuf,
+    //     .name = "ikanaide",
+    //     .ext = "uwu",
+    //     .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+    //     .buffer_size = 25,
+    // };
+
+    // write(request);
+
+    // struct FAT32DriverRequest req = {
+    //     .buf = 0,
+    //     .name = "ikanaide",
+    //     .ext = "uwu",
+    //     .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+    //     .buffer_size = 25,
+    // };
+
+    // read(req);
+
+
+
+    // struct FAT32DriverRequest request2 = {
+    //     .buf = cbuf,
+    //     .name = "kanol",
+    //     .ext = "txt",
+    //     .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+    //     .buffer_size = 25,
+    // };
+
+    // write(request2);
+
+    // struct FAT32DriverRequest request3 = {
+    //     .buf = cbuf,
+    //     .name = "ikanemas",
+    //     .ext = "exe",
+    //     .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+    //     .buffer_size = 0,
+    // };
+
+    // write(request3); // Create folder "ikanaide"
     // memcpy(request.name, "kano1\0\0\0", 8);
     // write(request);  // Create folder "kano1"
     //   memcpy(request.name, "ikanaide", 8);
@@ -74,8 +130,7 @@ void kernel_setup(void)
     //   request.buffer_size = 5*CLUSTER_SIZE;
     //   read(request);   // Success read on file "daijoubu"
 
-    while (TRUE)
-        ;
+
 
     // End of Milestone 2
 
@@ -307,4 +362,4 @@ void kernel_setup(void)
     // while (TRUE)
     //     ;
     // End of milestone 1
-}
+
