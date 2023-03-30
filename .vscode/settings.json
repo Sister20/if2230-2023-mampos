@@ -2,7 +2,8 @@
     "debug.onTaskErrors": "debugAnyway",
     "files.associations": {
         "interrupt.h": "c",
-        "stdtype.h": "c"
+        "stdtype.h": "c",
+        "stdmem.h": "c"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/FlowFrameKit.framework",
 }
