@@ -197,7 +197,7 @@ uint32_t find_empty_cluster(void)
     memset(&fs_state.fat_table, 0, CLUSTER_SIZE);
     read_clusters(&fs_state.fat_table, FAT_CLUSTER_NUMBER, 1);
 
-    for (uint32_t i = 3; i < CLUSTER_MAP_SIZE; i++)
+    for (uint32_t i = 0; i < CLUSTER_MAP_SIZE; i++)
     {
         if (fs_state.fat_table.cluster_map[i] == FAT32_FAT_EMPTY_ENTRY)
         {
@@ -250,7 +250,14 @@ int8_t write(struct FAT32DriverRequest request)
     new_entry.user_attribute = UATTR_NOT_EMPTY;
     new_entry.cluster_high = (uint16_t)(cluster_to_lba(request.parent_cluster_number) >> 16) & 0xFFFF;
     new_entry.cluster_low = (uint16_t)(cluster_to_lba(request.parent_cluster_number) & 0xFFFF);
-    new_entry.filesize = request.buffer_size;
+    if (is_dir)
+    {
+        new_entry.filesize = 0;
+    }
+    else
+    {
+        new_entry.filesize = request.buffer_size;
+    }
 
     // update parent directory entry
     memset(&fs_state.dir_table_buf, 0, CLUSTER_SIZE);
@@ -266,8 +273,8 @@ int8_t write(struct FAT32DriverRequest request)
     write_clusters(&fs_state.dir_table_buf, request.parent_cluster_number, 1);
 
     // update FAT mapping
-    memset(&fs_state.fat_table, 0, CLUSTER_SIZE);
-    read_clusters(&fs_state.fat_table, ROOT_CLUSTER_NUMBER, 1);
+    // memset(&fs_state.fat_table, 0, CLUSTER_SIZE);
+    read_clusters(&fs_state.fat_table, FAT_CLUSTER_NUMBER, 1); //
     if (is_dir)
     {
         fs_state.fat_table.cluster_map[empty_cluster_number] = FAT32_FAT_END_OF_FILE;
@@ -276,7 +283,7 @@ int8_t write(struct FAT32DriverRequest request)
     {
         fs_state.fat_table.cluster_map[empty_cluster_number] = FAT32_FAT_END_OF_FILE;
     }
-    write_clusters(&fs_state.fat_table, ROOT_CLUSTER_NUMBER, 1);
+    write_clusters(&fs_state.fat_table, FAT_CLUSTER_NUMBER, 1);
 
     // write cluster
     if (is_dir)

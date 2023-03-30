@@ -54,7 +54,8 @@ void kernel_setup(void)
         .buffer_size = 0,
     };
 
-    write(request3); // Create folder "ikanaide"
+    write(request3);
+    // Create folder "ikanaide"
     // memcpy(request.name, "kano1\0\0\0", 8);
     // write(request);  // Create folder "kano1"
     //   memcpy(request.name, "ikanaide", 8);
