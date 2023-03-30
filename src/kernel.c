@@ -34,28 +34,17 @@ void kernel_setup(void)
         .buffer_size = 0,
     };
 
+    // struct FAT32DriverRequest request2 = {
+    //     .buf = 0,
+    //     .name = "ikanaide",
+    //     .ext = "uwu",
+    //     .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+    //     .buffer_size = 25,
+    // };
+
     write(request);
-
-    struct FAT32DriverRequest request2 = {
-        .buf = cbuf,
-        .name = "kanol",
-        .ext = "txt",
-        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size = 25,
-    };
-
-    write(request2);
-
-    struct FAT32DriverRequest request3 = {
-        .buf = cbuf,
-        .name = "ikanemas",
-        .ext = "exe",
-        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size = 0,
-    };
-
-    write(request3);
-    // Create folder "ikanaide"
+    delete (request);
+    // read(request2);
     // memcpy(request.name, "kano1\0\0\0", 8);
     // write(request);  // Create folder "kano1"
     //   memcpy(request.name, "ikanaide", 8);
