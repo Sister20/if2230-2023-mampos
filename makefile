@@ -43,7 +43,6 @@ kernel: disk
 	@$(CC) $(CFLAGS) src/filesystem/disk.c -o bin/disk.o
 	@$(CC) $(CFLAGS) src/filesystem/fat32.c -o bin/fat32.o
 	@$(CC) $(CFLAGS) src/paging/paging.c -o bin/paging.o
-	@$(CC) $(CFLAGS) src/inserter/external-inserter.c -o bin/external-inserter.o
 	@$(LIN) $(LFLAGS) bin/*.o -o $(OUTPUT_FOLDER)/kernel
 	@echo Linking object files and generate elf32...
 	@rm -f *.o
