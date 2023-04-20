@@ -8,37 +8,67 @@
 #include "interrupt/interrupt.h"
 #include "keyboard/keyboard.h"
 #include "filesystem/fat32.h"
+#include "paging/paging.h"
 
 void kernel_setup(void)
 {
-enter_protected_mode(&_gdt_gdtr);
-pic_remap();
-initialize_idt();
-// activate_keyboard_interrupt();
-framebuffer_clear();
-framebuffer_set_cursor(0, 0);
-initialize_filesystem_fat32();
-keyboard_state_activate();
 
-struct ClusterBuffer cbuf[5];
-for (uint32_t i = 0; i < 5; i++)
-for (uint32_t j = 0; j < CLUSTER_SIZE; j++)
-cbuf[i].buf[j] = i + 'a';
+    enter_protected_mode(&_gdt_gdtr);
+    pic_remap();
+    initialize_idt();
+    activate_keyboard_interrupt();
+    framebuffer_clear();
+    framebuffer_set_cursor(0, 0);
+    initialize_filesystem_fat32();
+    gdt_install_tss();
+    set_tss_register();
 
-struct FAT32DriverRequest request = {
-.buf = cbuf,
-.name = "ikanaide",
-.ext = "uwu",
-.parent_cluster_number = ROOT_CLUSTER_NUMBER,
-.buffer_size = 0,
-} ;
+    // Allocate first 4 MiB virtual memory
+    allocate_single_user_page_frame((uint8_t*) 0);
 
-write(request); // Create folder "ikanaide"
-memcpy(request.name, "kano1\0\0\0", 8);
-write(request); // Create folder "kano1"
-memcpy(request.name, "ikanaide", 8);
-memcpy(request.ext, "\0\0\0", 3);
-delete(request); // Delete first folder, thus creating hole in FS
+    // Write shell into memory
+    struct FAT32DriverRequest request = {
+        .buf                   = (uint8_t*) 0,
+        .name                  = "shell",
+        .ext                   = "\0\0\0",
+        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+        .buffer_size           = 0x100000,
+    };
+    read(request);
+
+    // Set TSS $esp pointer and jump into shell 
+    set_tss_kernel_current_stack();
+    kernel_execute_user_program((uint8_t*) 0);
+
+    while (TRUE);
+// enter_protected_mode(&_gdt_gdtr);
+// pic_remap();
+// initialize_idt();
+// // activate_keyboard_interrupt();
+// framebuffer_clear();
+// framebuffer_set_cursor(0, 0);
+// initialize_filesystem_fat32();
+// keyboard_state_activate();
+
+// struct ClusterBuffer cbuf[5];
+// for (uint32_t i = 0; i < 5; i++)
+// for (uint32_t j = 0; j < CLUSTER_SIZE; j++)
+// cbuf[i].buf[j] = i + 'a';
+
+// struct FAT32DriverRequest request = {
+// .buf = cbuf,
+// .name = "ikanaide",
+// .ext = "uwu",
+// .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+// .buffer_size = 0,
+// } ;
+
+// write(request); // Create folder "ikanaide"
+// memcpy(request.name, "kano1\0\0\0", 8);
+// write(request); // Create folder "kano1"
+// memcpy(request.name, "ikanaide", 8);
+// memcpy(request.ext, "\0\0\0", 3);
+// delete(request); // Delete first folder, thus creating hole in FS
 
 // memcpy(request.name, "daijoubu", 8);
 // request.buffer_size = 5*CLUSTER_SIZE;
@@ -72,8 +102,8 @@ delete(request); // Delete first folder, thus creating hole in FS
     //   request.buffer_size = 5*CLUSTER_SIZE;
     //   read(request);   // Success read on file "daijoubu"
 
-    while (TRUE)
-        ;
+    // while (TRUE)
+    //     ;
 
     // End of Milestone 2
 
