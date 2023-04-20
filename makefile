@@ -64,3 +64,9 @@ iso: kernel
 		-o bin/OS2023.iso          \
 		bin/iso
 	@rm -r $(OUTPUT_FOLDER)/iso/
+
+inserter:
+	@$(CC) -Wno-builtin-declaration-mismatch -g \
+		$(SOURCE_FOLDER)/stdmem.c $(SOURCE_FOLDER)/fat32.c \
+		$(SOURCE_FOLDER)/external-inserter.c \
+		-o $(OUTPUT_FOLDER)/inserter
