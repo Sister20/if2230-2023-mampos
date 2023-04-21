@@ -7,6 +7,7 @@ CC            = gcc
 SOURCE_FOLDER = src
 OUTPUT_FOLDER = bin
 ISO_NAME      = OS2023
+DISK_NAME	  = storage
 
 # Flags
 WARNING_CFLAG = -Wall -Wextra -Werror
@@ -16,10 +17,12 @@ CFLAGS        = $(DEBUG_CFLAG) $(WARNING_CFLAG) $(STRIP_CFLAG) -m32 -c -I$(SOURC
 AFLAGS        = -f elf32 -g -F dwarf
 LFLAGS        = -T $(SOURCE_FOLDER)/linker.ld -melf_i386
 
-DISK_NAME      = storage
+refresh: disk insert-shell run
 
+run-gdb: all
+	@qemu-system-i386 -s -S -drive file=$(OUTPUT_FOLDER)/$(DISK_NAME).$(OUTPUT_FOLDER),format=raw,if=ide,index=0,media=disk -cdrom $(OUTPUT_FOLDER)/$(ISO_NAME).iso
 run: all
-	@qemu-system-i386 -s -drive file=bin/storage.bin,format=raw,if=ide,index=0,media=disk -cdrom $(OUTPUT_FOLDER)/$(ISO_NAME).iso
+	@qemu-system-i386 -drive file=$(OUTPUT_FOLDER)/$(DISK_NAME).$(OUTPUT_FOLDER),format=raw,if=ide,index=0,media=disk -cdrom $(OUTPUT_FOLDER)/$(ISO_NAME).iso
 all: build
 build: iso
 clean:
@@ -43,7 +46,6 @@ kernel: disk
 	@$(CC) $(CFLAGS) src/filesystem/disk.c -o bin/disk.o
 	@$(CC) $(CFLAGS) src/filesystem/fat32.c -o bin/fat32.o
 	@$(CC) $(CFLAGS) src/paging/paging.c -o bin/paging.o
-	@$(CC) $(CFLAGS) src/user-shell.c -o bin/user-shell.c
 	@$(LIN) $(LFLAGS) bin/*.o -o $(OUTPUT_FOLDER)/kernel
 	@echo Linking object files and generate elf32...
 	@rm -f *.o

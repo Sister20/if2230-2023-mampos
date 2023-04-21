@@ -43,11 +43,14 @@ struct PageDirectoryEntry {
     struct PageDirectoryEntryFlag flag;
     uint16_t global_page    : 1;
     // TODO : Continue, Use uint16_t + bitfield here, Do not use uint8_t
+    // * Note:
+    // * - Assume "Bits 39:32 of address" (higher_address) is 8-bit and Reserved is 1
+    // * - "Bits 31:22 of address" is called lower_address in kit
     uint16_t ignored        : 3;
     uint16_t PAT            : 1;
-    uint16_t higher_address : 4;
-    uint16_t reserved       : 5;
-    uint16_t lower_address  : 10;  
+    uint16_t higher_address : 8;
+    uint16_t reserved       : 1;
+    uint16_t lower_address  : 10;
 
 } __attribute__((packed));
 
@@ -63,7 +66,7 @@ struct PageDirectoryEntry {
 struct PageDirectory {
     // TODO : Implement
     struct PageDirectoryEntry table[PAGE_ENTRY_COUNT];
-} __attribute__((packed));
+} __attribute__((aligned(0x1000)));
 
 /**
  * Containing page driver states
