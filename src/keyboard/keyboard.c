@@ -264,7 +264,6 @@ const char keyboard_scancode_1_to_ascii_map[256] = {
 void keyboard_state_activate(void)
 {
     keyboard_state.keyboard_input_on = TRUE;
-    keyboard_isr();
 }
 
 // Deactivate keyboard ISR / stop listening keyboard interrupt

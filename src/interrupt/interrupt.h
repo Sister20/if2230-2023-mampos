@@ -59,6 +59,7 @@
 #define IRQ_SECOND_ATA 15
 
 #define PAGE_FAULT 14
+#define GDT_KERNEL_DATA_SEGMENT_SELECTOR 0x10
 
 /**
  * CPURegister, store CPU registers that can be used for interrupt handler / ISRs
@@ -137,5 +138,9 @@ struct TSSEntry {
 
 // Set kernel stack in TSS
 void set_tss_kernel_current_stack(void);
+
+void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptStack info);
+
+void puts(char *str, uint32_t len, uint8_t color);
 
 #endif
