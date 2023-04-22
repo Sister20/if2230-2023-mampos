@@ -57,8 +57,14 @@ void main_interrupt_handler(
     __attribute__((unused)) struct InterruptStack info
 ) {
     switch (int_number) {
+        case (PAGE_FAULT):
+            __asm__("hlt");
+            break;
         case (PIC1_OFFSET + IRQ_KEYBOARD): // Keyboard
-            keyboard_isr();
+            while (TRUE) {
+                keyboard_state_activate();
+            }
+        default:
             break;
     }
 }
