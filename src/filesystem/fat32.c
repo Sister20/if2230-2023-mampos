@@ -136,7 +136,7 @@ void create_fat32(void)
 
     // Write root directory into cluster number 2
     memset(&fs_state.dir_table_buf, 0, BLOCK_SIZE);
-    init_directory_table(&fs_state.dir_table_buf, "root", ROOT_CLUSTER_NUMBER);
+    init_directory_table(&fs_state.dir_table_buf, "root\0\0\0", ROOT_CLUSTER_NUMBER);
     write_clusters(&fs_state.dir_table_buf, ROOT_CLUSTER_NUMBER, 1);
 }
 
