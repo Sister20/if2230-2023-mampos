@@ -93,6 +93,12 @@ void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptSta
         struct FAT32DriverRequest request = *(struct FAT32DriverRequest *)cpu.ebx;
         *((int8_t *)cpu.ecx) = read(request);
     }
+    else if (cpu.eax == 100)
+    {
+        uint8_t row, col;
+        framebuffer_get_cursor(&row, &col);
+        framebuffer_set_cursor(row + 2, 0);
+    }
     else if (cpu.eax == 4)
     {
         keyboard_state_activate();
@@ -107,14 +113,22 @@ void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptSta
     {
         uint8_t row, col;
         framebuffer_get_cursor(&row, &col);
-        puts((char *)cpu.ebx, cpu.ecx, cpu.edx, row, col); // Modified puts() on kernel side
+        if (memcmp((char *)cpu.ebx, "cls", 3) == 0)
+        {
+            framebuffer_clear();
+            framebuffer_set_cursor(-2, 0);
+        }
+        else
+        {
+            puts((char *)cpu.ebx, cpu.ecx, cpu.edx, row, col);
+        }
     }
 }
 
 void puts(char *str, uint32_t len, uint8_t color, uint8_t row, uint8_t col) {
     framebuffer_set_cursor(row, col);
     for (uint32_t i = 0; i < len; i++) {
-        framebuffer_write(0, i + col, str[i], color, 0);
+        framebuffer_write(row, i + col, str[i], color, 0);
     }
     framebuffer_set_cursor(row, col + len);
 }

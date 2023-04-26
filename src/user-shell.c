@@ -32,12 +32,13 @@ int main(void) {
 
     char buf[16];
     while (TRUE) {
-        puts("bewe@OS-IF2230", 14, 0x2);
+        puts("mampOS@OS-IF2230", 16, 0x2);
         puts(":", 1, 0x8);
         puts("/", 1, 0x1);
         puts("$ ", 2, 0x8);
         syscall(4, (uint32_t) buf, 16, 0);
         syscall(5, (uint32_t) buf, 16, 0xF);
+        syscall(100, 0, 0, 0);
     }
 
     return 0;

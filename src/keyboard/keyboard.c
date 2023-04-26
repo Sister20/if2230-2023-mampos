@@ -264,6 +264,8 @@ const char keyboard_scancode_1_to_ascii_map[256] = {
 void keyboard_state_activate(void)
 {
     keyboard_state.keyboard_input_on = TRUE;
+    keyboard_state.buffer_index = 0;
+    memset(keyboard_state.keyboard_buffer, 0, KEYBOARD_BUFFER_SIZE);
 }
 
 // Deactivate keyboard ISR / stop listening keyboard interrupt
@@ -286,7 +288,6 @@ bool is_keyboard_blocking(void)
 
 void keyboard_isr(void)
 {
-
     uint8_t cursor_x, cursor_y;
     uint8_t scancode = in(KEYBOARD_DATA_PORT);
     char mapped_char = keyboard_scancode_1_to_ascii_map[scancode];
@@ -317,7 +318,7 @@ void keyboard_isr(void)
                 {
                     if (cursor_y != 0)
                     {
-                        keyboard_state.keyboard_buffer[keyboard_state.buffer_index] = 0;
+                        keyboard_state.keyboard_buffer[keyboard_state.buffer_index - 1] = 0;
                         keyboard_state.buffer_index--;
                         framebuffer_set_cursor(cursor_x, cursor_y - 1);
                         framebuffer_write(cursor_x, cursor_y - 1, ' ', 0x0F, 0x00);
@@ -326,7 +327,7 @@ void keyboard_isr(void)
                     {
                         if (cursor_x > 0)
                         {
-                            keyboard_state.keyboard_buffer[keyboard_state.buffer_index] = 0;
+                            keyboard_state.keyboard_buffer[keyboard_state.buffer_index - 1] = 0;
                             keyboard_state.buffer_index--;
                             framebuffer_set_cursor(cursor_x-1, 79);
                             framebuffer_write(cursor_x-1, 79, ' ', 0x0F, 0x00);
@@ -339,9 +340,9 @@ void keyboard_isr(void)
             // Enter
             else if (last_mapped_char == '\n')
             {
-                keyboard_state.keyboard_buffer[keyboard_state.buffer_index++] = last_mapped_char;
-                framebuffer_set_cursor(cursor_x + 1, 0);
+                framebuffer_set_cursor(cursor_x + 2, 0);
                 keyboard_state_deactivate();
+                keyboard_state.buffer_index = 0;
             }
 
             // Character
