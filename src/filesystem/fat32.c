@@ -455,8 +455,7 @@ int8_t read(struct FAT32DriverRequest request)
             {
                 clusters += 1;
             }
-            else
-            {
+            
                 // location is taken from cluster high and cluster low
                 uint32_t loc = (fs_state.dir_table_buf.table[i].cluster_high << 16) | fs_state.dir_table_buf.table[i].cluster_low;
                 for (uint32_t j = 0; j < clusters; j++)
@@ -472,7 +471,7 @@ int8_t read(struct FAT32DriverRequest request)
                     }
                 }
                 return 0;
-            }
+            
         }
     }
     return -1;

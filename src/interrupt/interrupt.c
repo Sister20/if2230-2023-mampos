@@ -69,7 +69,10 @@ void main_interrupt_handler(struct CPURegister cpu, uint32_t int_number, struct 
     case 0x30:
         syscall(cpu, info);
         break;
+    default:
+        break;
     }
+    
 }
 
 void set_tss_kernel_current_stack(void)
@@ -102,12 +105,17 @@ void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptSta
     }
     else if (cpu.eax == 5)
     {
-        puts((char *)cpu.ebx, cpu.ecx, cpu.edx); // Modified puts() on kernel side
+        uint8_t row, col;
+        framebuffer_get_cursor(&row, &col);
+        puts((char *)cpu.ebx, cpu.ecx, cpu.edx, row, col); // Modified puts() on kernel side
     }
 }
 
-void puts(char *str, uint32_t len, uint8_t color) {
+void puts(char *str, uint32_t len, uint8_t color, uint8_t row, uint8_t col) {
+    framebuffer_set_cursor(row, col);
     for (uint32_t i = 0; i < len; i++) {
-        framebuffer_write(0, i, str[i], color, 0);
+        framebuffer_write(0, i + col, str[i], color, 0);
     }
+    framebuffer_set_cursor(row, col + len);
 }
+
