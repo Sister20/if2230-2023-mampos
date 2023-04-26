@@ -102,12 +102,12 @@ void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptSta
     }
     else if (cpu.eax == 5)
     {
-        // puts((char *)cpu.ebx, cpu.ecx, cpu.edx); // Modified puts() on kernel side
+        puts((char *)cpu.ebx, cpu.ecx, cpu.edx); // Modified puts() on kernel side
     }
 }
 
-// void puts(char *str, uint32_t len, uint8_t color) {
-//     for (uint32_t i = 0; i < len; i++) {
-//         framebuffer_write(uint8_t row, uint8_t col, char c, uint8_t fg, uint8_t bg);
-//     }
-// }
+void puts(char *str, uint32_t len, uint8_t color) {
+    for (uint32_t i = 0; i < len; i++) {
+        framebuffer_write(0, i, str[i], color, 0);
+    }
+}
