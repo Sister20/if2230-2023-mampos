@@ -87,9 +87,6 @@ void parse_command(uint32_t buf) {
         int count = 0;
         for (int i = 0; i < 8; i++) {
             if (name[i] == '.') {
-                request.ext[0] = name[i + 1];
-                request.ext[1] = name[i + 2];
-                request.ext[2] = name[i + 3];
                 break;
             }
             request.name[i] = name[i];
