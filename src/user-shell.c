@@ -38,6 +38,7 @@ void* memcpy(void* restrict dest, const void* restrict src, size_t n) {
 }
 
 void parse_command(uint32_t buf) {
+    int32_t retcode;
     if (memcmp((char *)buf, "cls", 3) == 0)
     {
         syscall(6, 0, 0, 0);
@@ -48,11 +49,10 @@ void parse_command(uint32_t buf) {
     }
     else if (memcmp((char*)buf, "ls", 2) == 0)
     {
-    
+
     }
     else if (memcmp((char *)buf, "mkdir", 5) == 0)
     {
-        int32_t retcode;
         const char *name = (const char *)(buf + 6);
         struct FAT32DriverRequest request = {
             .parent_cluster_number = ROOT_CLUSTER_NUMBER,
@@ -79,7 +79,33 @@ void parse_command(uint32_t buf) {
     }
     else if (memcmp((char *)buf, "rm", 2) == 0)
     {
-        
+        const char *name = (const char *)(buf + 3);
+        struct FAT32DriverRequest request = {
+            .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+        };
+        // loop until find .
+        int count = 0;
+        for (int i = 0; i < 8; i++) {
+            if (name[i] == '.') {
+                request.ext[0] = name[i + 1];
+                request.ext[1] = name[i + 2];
+                request.ext[2] = name[i + 3];
+                break;
+            }
+            request.name[i] = name[i];
+            count++;
+        }
+        memcpy(request.name, name, count);
+        memcpy(request.ext, name + count + 1, 3);
+        syscall(3, (uint32_t)&request, (uint32_t)&retcode, 0);
+        if (retcode == 0) 
+        {
+            puts("Delete File Success", 20, 0x2);
+        }
+        else 
+        {
+            puts("Delete File Failed", 19, 0x4);
+        }
     }
     else if (memcmp((char *)buf, "mv", 2) == 0)
     {
@@ -109,6 +135,15 @@ int main(void) {
     syscall(0, (uint32_t) &request, (uint32_t) &retcode, 0);
     // if (retcode == 0)
     //     syscall(5, (uint32_t) "owo\n", 4, 0xF);
+
+    struct FAT32DriverRequest req = {
+        .buf                   = &cl,
+        .name                  = "ikanaide",
+        .ext                   = "uwu",
+        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+        .buffer_size           = CLUSTER_SIZE,
+    };
+    syscall(2, (uint32_t) &req, (uint32_t) &retcode, 0);
 
     char buf[16];
     while (TRUE) {

@@ -175,17 +175,17 @@ bool file_exist(struct FAT32DriverRequest request)
 
     for (uint32_t i = 1; i < CLUSTER_SIZE / sizeof(struct FAT32DirectoryEntry); i++)
     {
-        if (fs_state.dir_table_buf.table[i].user_attribute == UATTR_NOT_EMPTY)
-        {
+        // if (fs_state.dir_table_buf.table[i].user_attribute == UATTR_NOT_EMPTY)
+        // {
             if (memcmp(fs_state.dir_table_buf.table[i].name, request.name, 8) == 0 && memcmp(fs_state.dir_table_buf.table[i].ext, request.ext, 3) == 0)
             {
                 return TRUE;
             }
-        }
-        else
-        {
-            break;
-        }
+        // }
+        // else
+        // {
+        //     break;
+        // }
     }
 
     memset(&fs_state.dir_table_buf, 0, CLUSTER_SIZE);
