@@ -37,23 +37,6 @@ void kernel_setup(void)
     };
     read(request);
 
-    struct ClusterBuffer cbuf[5];
-    for (uint32_t i = 0; i < 5; i++)
-        for (uint32_t j = 0; j < CLUSTER_SIZE; j++)
-            cbuf[i].buf[j] = i + 'a';
-
-    struct FAT32DriverRequest req = {
-        .buf = cbuf,
-        .name = "ikanaide",
-        .ext = "uwu",
-        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size = 0,
-    };
-
-    write(req); // Create folder "ikanaide"
-    memcpy(req.name, "kano1\0\0\0", 8);
-    write(req); // Create folder "kano1"
-
     // Set TSS $esp pointer and jump into shell
     set_tss_kernel_current_stack();
     kernel_execute_user_program((uint8_t*) 0);

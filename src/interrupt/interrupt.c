@@ -90,10 +90,25 @@ void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptSta
 {
     uint8_t row, col;
     framebuffer_get_cursor(&row, &col);
-    if (cpu.eax == 0)
+    if (cpu.eax == 0) //read
     {
         struct FAT32DriverRequest request = *(struct FAT32DriverRequest *)cpu.ebx;
-        *((int8_t *)cpu.ecx) = read(request);
+        *((int32_t *)cpu.ecx) = read(request);
+    }
+    else if (cpu.eax == 1) //read dir
+    {
+        struct FAT32DriverRequest request = *(struct FAT32DriverRequest *)cpu.ebx;
+        *((int32_t *)cpu.ecx) = read_directory(request);
+    }
+    else if (cpu.eax == 2) //write
+    {
+        struct FAT32DriverRequest request = *(struct FAT32DriverRequest *)cpu.ebx;
+        *((int32_t *)cpu.ecx) = write(request);
+    }
+    else if (cpu.eax == 3) //delete
+    {
+        struct FAT32DriverRequest request = *(struct FAT32DriverRequest *)cpu.ebx;
+        *((int32_t *)cpu.ecx) = delete(request);
     }
     else if (cpu.eax == 4)
     {
@@ -109,12 +124,12 @@ void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptSta
     {
         puts((char *)cpu.ebx, cpu.ecx, cpu.edx, row, col);
     }
-    else if (cpu.eax == 100)
+    else if (cpu.eax == 6)
     {
         framebuffer_clear();
         framebuffer_set_cursor(-2, 0);
     }
-    else if (cpu.eax == 101)
+    else if (cpu.eax == 7)
     {
         framebuffer_set_cursor(row + 2, 0);
     }

@@ -29,10 +29,18 @@ int memcmp(const void *s1, const void *s2, size_t n) {
     return 0;
 }
 
+void* memcpy(void* restrict dest, const void* restrict src, size_t n) {
+    uint8_t *dstbuf       = (uint8_t*) dest;
+    const uint8_t *srcbuf = (const uint8_t*) src;
+    for (size_t i = 0; i < n; i++)
+        dstbuf[i] = srcbuf[i];
+    return dstbuf;
+}
+
 void parse_command(uint32_t buf) {
     if (memcmp((char *)buf, "cls", 3) == 0)
     {
-        syscall(100, 0, 0, 0);
+        syscall(6, 0, 0, 0);
     }
     else if (memcmp((char *)buf, "cd", 2) == 0)
     {
@@ -44,7 +52,22 @@ void parse_command(uint32_t buf) {
     }
     else if (memcmp((char *)buf, "mkdir", 5) == 0)
     {
-        
+        int32_t retcode;
+        const char *name = (const char *)(buf + 6);
+        struct FAT32DriverRequest request = {
+            .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+            .buffer_size = 0,
+        };
+        memcpy(request.name, name, sizeof(request.name) - 1);
+        syscall(2, (uint32_t)&request, (uint32_t)&retcode, 0);
+        if (retcode == 0) 
+        {
+            puts("Write Directory Success", 23, 0x2);
+        }
+        else 
+        {
+            puts("Write Directory Failed", 22, 0x4);
+        }
     }
     else if (memcmp((char *)buf, "cat", 3) == 0)
     {
@@ -74,16 +97,16 @@ void parse_command(uint32_t buf) {
 
 
 int main(void) {
-    // struct ClusterBuffer cl           = {0};
-    // struct FAT32DriverRequest request = {
-    //     .buf                   = &cl,
-    //     .name                  = "ikanaide",
-    //     .ext                   = "\0\0\0",
-    //     .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-    //     .buffer_size           = CLUSTER_SIZE,
-    // };
-    // int32_t retcode;
-    // syscall(0, (uint32_t) &request, (uint32_t) &retcode, 0);
+    struct ClusterBuffer cl           = {0};
+    struct FAT32DriverRequest request = {
+        .buf                   = &cl,
+        .name                  = "ikanaide",
+        .ext                   = "\0\0\0",
+        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+        .buffer_size           = CLUSTER_SIZE,
+    };
+    int32_t retcode;
+    syscall(0, (uint32_t) &request, (uint32_t) &retcode, 0);
     // if (retcode == 0)
     //     syscall(5, (uint32_t) "owo\n", 4, 0xF);
 
@@ -95,7 +118,7 @@ int main(void) {
         puts("$ ", 2, 0x8);
         syscall(4, (uint32_t) buf, 16, 0);
         parse_command((uint32_t) buf);
-        syscall(101, 0, 0, 0);
+        syscall(7, 0, 0, 0);
     }
 
     return 0;
