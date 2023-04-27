@@ -88,16 +88,12 @@ void set_tss_kernel_current_stack(void)
 
 void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptStack info)
 {
+    uint8_t row, col;
+    framebuffer_get_cursor(&row, &col);
     if (cpu.eax == 0)
     {
         struct FAT32DriverRequest request = *(struct FAT32DriverRequest *)cpu.ebx;
         *((int8_t *)cpu.ecx) = read(request);
-    }
-    else if (cpu.eax == 100)
-    {
-        uint8_t row, col;
-        framebuffer_get_cursor(&row, &col);
-        framebuffer_set_cursor(row + 2, 0);
     }
     else if (cpu.eax == 4)
     {
@@ -111,51 +107,16 @@ void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptSta
     }
     else if (cpu.eax == 5)
     {
-        uint8_t row, col;
-        framebuffer_get_cursor(&row, &col);
-        if (memcmp((char *)cpu.ebx, "cls", 3) == 0)
-        {
-            framebuffer_clear();
-            framebuffer_set_cursor(-2, 0);
-        }
-        else if (memcmp((char *)cpu.ebx, "cd", 2) == 0)
-        {
-            char *path = (char *)cpu.ebx + 3;
-            uint32_t len = cpu.ecx - 3;
-            puts(path, len, cpu.edx, row, col);
-        }
-        else if (memcmp((char*)cpu.ebx, "ls", 2) == 0)
-        {
-
-        }
-        else if (memcmp((char *)cpu.ebx, "mkdir", 5) == 0)
-        {
-            
-        }
-        else if (memcmp((char *)cpu.ebx, "cat", 3) == 0)
-        {
-
-        }
-        else if (memcmp((char *)cpu.ebx, "cp", 2) == 0)
-        {
-            
-        }
-        else if (memcmp((char *)cpu.ebx, "rm", 2) == 0)
-        {
-            
-        }
-        else if (memcmp((char *)cpu.ebx, "mv", 2) == 0)
-        {
-            
-        }
-        else if (memcmp((char *)cpu.ebx, "whereis", 7) == 0)
-        {
-            
-        }
-        else
-        {
-            puts((char *)cpu.ebx, cpu.ecx, cpu.edx, row, col);
-        }
+        puts((char *)cpu.ebx, cpu.ecx, cpu.edx, row, col);
+    }
+    else if (cpu.eax == 100)
+    {
+        framebuffer_clear();
+        framebuffer_set_cursor(-2, 0);
+    }
+    else if (cpu.eax == 101)
+    {
+        framebuffer_set_cursor(row + 2, 0);
     }
 }
 
@@ -166,4 +127,3 @@ void puts(char *str, uint32_t len, uint8_t color, uint8_t row, uint8_t col) {
     }
     framebuffer_set_cursor(row, col + len);
 }
-

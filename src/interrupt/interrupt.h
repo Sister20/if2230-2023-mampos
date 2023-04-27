@@ -143,4 +143,6 @@ void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptSta
 
 void puts(char *str, uint32_t len, uint8_t color, uint8_t row, uint8_t col);
 
+void is_there(char *path);
+
 #endif

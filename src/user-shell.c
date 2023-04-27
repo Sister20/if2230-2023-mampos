@@ -16,6 +16,63 @@ void puts(char *str, uint32_t len, uint8_t color) {
     syscall(5, (uint32_t) str, len, color);
 }
 
+int memcmp(const void *s1, const void *s2, size_t n) {
+    const uint8_t *buf1 = (const uint8_t*) s1;
+    const uint8_t *buf2 = (const uint8_t*) s2;
+    for (size_t i = 0; i < n; i++) {
+        if (buf1[i] < buf2[i])
+            return -1;
+        else if (buf1[i] > buf2[i])
+            return 1;
+    }
+
+    return 0;
+}
+
+void parse_command(uint32_t buf) {
+    if (memcmp((char *)buf, "cls", 3) == 0)
+    {
+        syscall(100, 0, 0, 0);
+    }
+    else if (memcmp((char *)buf, "cd", 2) == 0)
+    {
+        syscall(5, buf + 3, 16 - 3, 0xF);
+    }
+    else if (memcmp((char*)buf, "ls", 2) == 0)
+    {
+    
+    }
+    else if (memcmp((char *)buf, "mkdir", 5) == 0)
+    {
+        
+    }
+    else if (memcmp((char *)buf, "cat", 3) == 0)
+    {
+
+    }
+    else if (memcmp((char *)buf, "cp", 2) == 0)
+    {
+        
+    }
+    else if (memcmp((char *)buf, "rm", 2) == 0)
+    {
+        
+    }
+    else if (memcmp((char *)buf, "mv", 2) == 0)
+    {
+        
+    }
+    else if (memcmp((char *)buf, "whereis", 7) == 0)
+    {
+        
+    }
+    else
+    {
+        puts("Command not found", 17, 0x4);
+    }
+}
+
+
 int main(void) {
     // struct ClusterBuffer cl           = {0};
     // struct FAT32DriverRequest request = {
@@ -37,8 +94,8 @@ int main(void) {
         puts("/", 1, 0x1);
         puts("$ ", 2, 0x8);
         syscall(4, (uint32_t) buf, 16, 0);
-        syscall(5, (uint32_t) buf, 16, 0xF);
-        syscall(100, 0, 0, 0);
+        parse_command((uint32_t) buf);
+        syscall(101, 0, 0, 0);
     }
 
     return 0;
