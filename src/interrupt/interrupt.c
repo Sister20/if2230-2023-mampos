@@ -118,6 +118,40 @@ void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptSta
             framebuffer_clear();
             framebuffer_set_cursor(-2, 0);
         }
+        else if (memcmp((char *)cpu.ebx, "cd", 2) == 0)
+        {
+            char *path = (char *)cpu.ebx + 3;
+            uint32_t len = cpu.ecx - 3;
+            puts(path, len, cpu.edx, row, col);
+        }
+        else if (memcmp((char*)cpu.ebx, "ls", 2) == 0)
+        {
+
+        }
+        else if (memcmp((char *)cpu.ebx, "mkdir", 5) == 0)
+        {
+            
+        }
+        else if (memcmp((char *)cpu.ebx, "cat", 3) == 0)
+        {
+
+        }
+        else if (memcmp((char *)cpu.ebx, "cp", 2) == 0)
+        {
+            
+        }
+        else if (memcmp((char *)cpu.ebx, "rm", 2) == 0)
+        {
+            
+        }
+        else if (memcmp((char *)cpu.ebx, "mv", 2) == 0)
+        {
+            
+        }
+        else if (memcmp((char *)cpu.ebx, "whereis", 7) == 0)
+        {
+            
+        }
         else
         {
             puts((char *)cpu.ebx, cpu.ecx, cpu.edx, row, col);
