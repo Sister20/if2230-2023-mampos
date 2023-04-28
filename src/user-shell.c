@@ -53,6 +53,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
 }
 
 struct ClusterBuffer cl = {0};
+struct FAT32DriverRequest request = {0};
 void parse_command(uint32_t buf)
 {
     int32_t retcode;
@@ -93,6 +94,7 @@ void parse_command(uint32_t buf)
             {
                 .parent_cluster_number = current_working_directory,
                 .buf = &cl,
+                // .buffer_size = 256,
             };
         // loop until find .
         int count = 0;
@@ -110,7 +112,7 @@ void parse_command(uint32_t buf)
         syscall(0, (uint32_t)&request, (uint32_t)&retcode, 0);
         if (retcode == 0)
         {
-            puts(request.buf, request.buffer_size, 0xF);
+            puts(request.buf, 256, 0xF);
             // syscall(7, 0, 0, 0);
         }
         else

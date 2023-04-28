@@ -470,11 +470,6 @@ int8_t read(struct FAT32DriverRequest request)
                     loc = fs_state.fat_table.cluster_map[loc];
                 }
             }
-            // request.buffer_size = 23;
-            uint32_t buffer_size = clusters * CLUSTER_SIZE;
-            // memcpy(&request.buffer_size, &buffer_size, clusters * CLUSTER_SIZE);
-            // memcpy(&request.buffer_size, 32, sizeof(uint32_t));
-            memcpy(&request.buffer_size, &buffer_size, sizeof(uint32_t));
             return 0;
         }
     }
