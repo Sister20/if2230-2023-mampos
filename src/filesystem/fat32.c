@@ -177,10 +177,10 @@ bool file_exist(struct FAT32DriverRequest request)
     {
         // if (fs_state.dir_table_buf.table[i].user_attribute == UATTR_NOT_EMPTY)
         // {
-            if (memcmp(fs_state.dir_table_buf.table[i].name, request.name, 8) == 0 && memcmp(fs_state.dir_table_buf.table[i].ext, request.ext, 3) == 0)
-            {
-                return TRUE;
-            }
+        if (memcmp(fs_state.dir_table_buf.table[i].name, request.name, 8) == 0 && memcmp(fs_state.dir_table_buf.table[i].ext, request.ext, 3) == 0)
+        {
+            return TRUE;
+        }
         // }
         // else
         // {
@@ -441,12 +441,13 @@ int8_t read(struct FAT32DriverRequest request)
         if (memcmp(fs_state.dir_table_buf.table[i].name, request.name, 8) == 0 && memcmp(fs_state.dir_table_buf.table[i].ext, request.ext, 3) == 0)
         {
             // check if buffer size enough
-            if (request.buffer_size < fs_state.dir_table_buf.table[i].filesize)
-            {
-                return 2;
-                // check if its a file
-            }
-            else if (fs_state.dir_table_buf.table[i].attribute == 1)
+            // if (request.buffer_size < fs_state.dir_table_buf.table[i].filesize)
+            // {
+            //     return 2;
+            //     // check if its a file
+            // }
+            // else
+            if (fs_state.dir_table_buf.table[i].attribute == 1)
             {
                 return 1;
             }
@@ -455,26 +456,33 @@ int8_t read(struct FAT32DriverRequest request)
             {
                 clusters += 1;
             }
-            
-                // location is taken from cluster high and cluster low
-                uint32_t loc = (fs_state.dir_table_buf.table[i].cluster_high << 16) | fs_state.dir_table_buf.table[i].cluster_low;
-                for (uint32_t j = 0; j < clusters; j++)
+            // location is taken from cluster high and cluster low
+            uint32_t loc = (fs_state.dir_table_buf.table[i].cluster_high << 16) | fs_state.dir_table_buf.table[i].cluster_low;
+            for (uint32_t j = 0; j < clusters; j++)
+            {
+                if (j == 0)
                 {
-                    if (j == 0)
-                    {
-                        read_clusters(request.buf + CLUSTER_SIZE * j, loc, 1);
-                    }
-                    else
-                    {
-                        read_clusters(request.buf + CLUSTER_SIZE * j, fs_state.fat_table.cluster_map[loc], 1);
-                        loc = fs_state.fat_table.cluster_map[loc];
-                    }
+                    read_clusters(request.buf + CLUSTER_SIZE * j, loc, 1);
                 }
-                return 0;
-            
+                else
+                {
+                    read_clusters(request.buf + CLUSTER_SIZE * j, fs_state.fat_table.cluster_map[loc], 1);
+                    loc = fs_state.fat_table.cluster_map[loc];
+                }
+            }
+            // request.buffer_size = 23;
+            uint32_t buffer_size = clusters * CLUSTER_SIZE;
+            // memcpy(&request.buffer_size, &buffer_size, clusters * CLUSTER_SIZE);
+            // memcpy(&request.buffer_size, 32, sizeof(uint32_t));
+            memcpy(&request.buffer_size, &buffer_size, sizeof(uint32_t));
+            return 0;
         }
     }
     return -1;
+    // int8_t foundIdx = -1;
+    // for (int i = 0; i < 64; i++)
+    // {
+    // }
 }
 
 // pertama read cluster trs loop nyari name ext yg sama kl ketemu abis itu

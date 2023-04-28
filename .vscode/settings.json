@@ -4,7 +4,8 @@
         "interrupt.h": "c",
         "stdtype.h": "c",
         "stdmem.h": "c",
-        "fat32.h": "c"
+        "fat32.h": "c",
+        "framebuffer.h": "c"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/FlowFrameKit.framework",
 }
