@@ -37,6 +37,27 @@ void kernel_setup(void)
     };
     read(request);
 
+    struct FAT32DriverRequest reqs = {
+        .name                  = "ikanaide",
+        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+        .buffer_size           = 0,
+    };
+    write(reqs);
+
+    struct ClusterBuffer cbuf[5];
+    for (uint32_t i = 0; i < 5; i++)
+        for (uint32_t j = 0; j < CLUSTER_SIZE; j++)
+            cbuf[i].buf[j] = i + 'a';
+    struct FAT32DriverRequest req = {
+        .buf                   = cbuf,
+        .name                  = "ikanaide",
+        .ext                   = "uwu",
+        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+        .buffer_size           = CLUSTER_SIZE,
+    };
+    write(req);
+
+
     // Set TSS $esp pointer and jump into shell
     set_tss_kernel_current_stack();
     kernel_execute_user_program((uint8_t*) 0);
