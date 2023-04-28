@@ -515,3 +515,29 @@ int8_t read_directory(struct FAT32DriverRequest request)
     }
     return -1;
 }
+// {
+//     // Mencari direktori yang terletak pada folder parent request.parent_cluster_number
+//     uint32_t current_cluster = request.parent_cluster_number;
+
+//     read_clusters(&fs_state.dir_table_buf, current_cluster, 1);
+//     read_clusters(&fs_state.fat_table, 1, 1);
+
+//     // Mencari file yang terletak pada folder parent request.parent_cluster_number
+//     struct FAT32DirectoryEntry *entry = NULL;
+//     for (uint32_t i = 0; i < CLUSTER_SIZE / sizeof(struct FAT32DirectoryEntry); i++) {
+//         if (memcmp(fs_state.dir_table_buf.table[i].name, request.name, sizeof(request.name)) == 0 &&
+//             (fs_state.dir_table_buf.table[i].attribute & ATTR_SUBDIRECTORY)) {
+//             entry = &fs_state.dir_table_buf.table[i];
+//             break;
+//         }
+//     }
+
+//     if (entry == NULL) {
+//         return -1;
+//     }
+
+//     uint32_t cluster_number = (entry->cluster_high << 16) | entry->cluster_low;
+//     read_clusters(request.buf, cluster_number, 1);
+
+//     return 0;
+// }
