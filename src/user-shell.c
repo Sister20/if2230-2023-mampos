@@ -120,6 +120,19 @@ void parse_command(uint32_t buf) {
 
 
 int main(void) {
+    struct ClusterBuffer cl           = {0};
+    struct FAT32DriverRequest request = {
+        .buf                   = &cl,
+        .name                  = "ikanaide",
+        .ext                   = "\0\0\0",
+        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+        .buffer_size           = CLUSTER_SIZE,
+    };
+    int32_t retcode;
+    syscall(0, (uint32_t) &request, (uint32_t) &retcode, 0);
+    // if (retcode == 0)
+    //     syscall(5, (uint32_t) "owo\n", 4, 0xF);
+
     char buf[16];
     while (TRUE) {
         puts("mampOS@OS-IF2230", 16, 0x2);
