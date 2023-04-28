@@ -57,7 +57,7 @@ struct FAT32DriverRequest request = {0};
 void parse_command(uint32_t buf)
 {
     int32_t retcode;
-    if (memcmp((char *)buf, "cls", 3) == 0)
+    if (memcmp((char *)buf, "clear", 5) == 0)
     {
         syscall(6, 0, 0, 0);
     }
@@ -67,7 +67,39 @@ void parse_command(uint32_t buf)
     }
     else if (memcmp((char *)buf, "ls", 2) == 0)
     {
+        struct FAT32DriverRequest request = {
+            .name = "root",
+            .parent_cluster_number = current_working_directory,
+            .buffer_size = 0,
+        };
+        syscall(1, (uint32_t)&request, (uint32_t)&retcode, 0);
+        if (retcode == 0)
+        {
+            puts(request.buf, 256, 0xF);
+        }
+        else
+        {
+            puts("Read Failed", 11, 0x4);
+        }
     }
+    // else if (memcmp((char *)buf, "touch", 5) == 0)
+    // {
+    //     const char *name = (const char *)(buf + 6);
+    //     struct FAT32DriverRequest request = {
+    //         .parent_cluster_number = current_working_directory,
+    //         .buffer_size = 0,
+    //     };
+    //     memcpy(request.name, name, sizeof(request.name) - 1);
+    //     syscall(4, (uint32_t)&request, (uint32_t)&retcode, 0);
+    //     if (retcode == 0)
+    //     {
+    //         puts("Write File Success", 19, 0x2);
+    //     }
+    //     else
+    //     {
+    //         puts("Write File Failed", 18, 0x4);
+    //     }
+    // }
     else if (memcmp((char *)buf, "mkdir", 5) == 0)
     {
         const char *name = (const char *)(buf + 6);
@@ -166,19 +198,6 @@ void parse_command(uint32_t buf)
 
 int main(void)
 {
-    struct ClusterBuffer cl = {0};
-    struct FAT32DriverRequest request = {
-        .buf = &cl,
-        .name = "ikanaide",
-        .ext = "\0\0\0",
-        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size = CLUSTER_SIZE,
-    };
-    int32_t retcode;
-    syscall(0, (uint32_t)&request, (uint32_t)&retcode, 0);
-    // if (retcode == 0)
-    //     syscall(5, (uint32_t) "owo\n", 4, 0xF);
-
     char buf[16];
     while (TRUE)
     {

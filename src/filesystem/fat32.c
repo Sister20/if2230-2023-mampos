@@ -508,7 +508,7 @@ int8_t read_directory(struct FAT32DriverRequest request)
             {
                 // location is taken from cluster high and cluster low
                 uint32_t loc = (fs_state.dir_table_buf.table[i].cluster_high << 16) | fs_state.dir_table_buf.table[i].cluster_low;
-                read_clusters(request.buf, loc, 1);
+                read_clusters(request.buf, loc, clusters);
                 return 0;
             }
         }
