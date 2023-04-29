@@ -63,7 +63,36 @@ void parse_command(uint32_t buf)
     }
     else if (memcmp((char *)buf, "cd", 2) == 0)
     {
-        syscall(5, buf + 3, 16 - 3, 0xF);
+        // syscall(5, buf + 3, 16 - 3, 0xF);
+        const char *name = (const char *)(buf + 3);
+        struct FAT32DriverRequest request = {
+            .name = "root",
+            .buf = &cl,
+            .parent_cluster_number = current_working_directory,
+            .buffer_size = 0,
+        };
+        struct FAT32DirectoryTable table = {0};
+        request.buf = &table;
+        syscall(1, (uint32_t)&request, (uint32_t)&retcode, 0);
+        if (retcode == 0)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                if (table.table[i].name[0] == 0)
+                {
+                    break;
+                }
+                if (memcmp(table.table[i].name, name, 8) == 0)
+                {
+                    current_working_directory = table.table[i].cluster_high << 16 | table.table[i].cluster_low;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            puts("Read Failed", 11, 0x4);
+        }
     }
     else if (memcmp((char *)buf, "ls", 2) == 0)
     {
