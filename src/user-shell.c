@@ -3,9 +3,9 @@
 #include "lib-header/framebuffer.h"
 
 
-static uint32_t current_working_directory = ROOT_CLUSTER_NUMBER;
-static char *current_working_directory_name = "root";
-static uint32_t current_working_directory_name_size = 4;
+static uint32_t current_working_directory[10] = {ROOT_CLUSTER_NUMBER};
+static char *current_working_directory_name[10] = {"root\0\0\0\0"};
+static uint32_t current_working_directory_idx = 0;
 
 void syscall(uint32_t eax, uint32_t ebx, uint32_t ecx, uint32_t edx)
 {
@@ -70,17 +70,19 @@ void parse_command(uint32_t buf)
         const char *name = (const char *)(buf + 3);
         struct FAT32DriverRequest request = {
             .buf = &cl,
-            .parent_cluster_number = current_working_directory,
+            .parent_cluster_number = current_working_directory[current_working_directory_idx],
             .buffer_size = 0,
         };
-        memcpy(request.name, current_working_directory_name, sizeof(current_working_directory_name));
+        memcpy(request.name, current_working_directory_name[current_working_directory_idx], 8);
         struct FAT32DirectoryTable table = {0};
         request.buf = &table;
-        if (memcmp(name, "..", 2) == 0 && current_working_directory != ROOT_CLUSTER_NUMBER) {
-            current_working_directory = ROOT_CLUSTER_NUMBER;
-            current_working_directory_name = "root";
-            current_working_directory_name_size = 4;
-            puts("You are in root", 15, 0x2);
+        if (memcmp(name, "..", 2) == 0 && current_working_directory_idx != 0)
+        {
+            // update cwd array size
+            current_working_directory_idx--;
+
+            puts("You are in ", 11, 0x2);
+            puts(current_working_directory_name[current_working_directory_idx], 8, 0x2);
             return;
         }
         syscall(1, (uint32_t)&request, (uint32_t)&retcode, 0);
@@ -93,14 +95,20 @@ void parse_command(uint32_t buf)
                     puts("Change Directory Failed", 23, 0x4);
                     break;
                 }
-                if (memcmp(table.table[i].name, name, 8) == 0 && table.table[i].ext[0] == 0)
+                if (memcmp(table.table[i].name, name, 8) == 0 && memcmp(table.table[i].ext, name + 8, 3) == 0)
                 {
-                    current_working_directory = table.table[i].cluster_high << 16 | table.table[i].cluster_low;
-                    current_working_directory_name = table.table[i].name;
-                    current_working_directory_name_size = sizeof(table.table[i].name);
+                    // update cwd array size
+                    current_working_directory_idx++;
+
+                    // append cwd cluster number
+                    current_working_directory[current_working_directory_idx] = table.table[i].cluster_high << 16 | table.table[i].cluster_low;
+
+                    // append cwd name
+                    current_working_directory_name[current_working_directory_idx] = table.table[i].name;
+
                     puts("You are in ", 11, 0x2);
-                    puts(table.table[i].name, 8, 0x2);
-                    
+                    puts(current_working_directory_name[current_working_directory_idx], 8, 0x2);
+
                     break;
                 }
             }
@@ -114,10 +122,10 @@ void parse_command(uint32_t buf)
     {
         struct FAT32DriverRequest request = {
             .buf = &cl,
-            .parent_cluster_number = current_working_directory,
+            .parent_cluster_number = current_working_directory[current_working_directory_idx],
             .buffer_size = 0,
         };
-        memcpy(request.name, current_working_directory_name, current_working_directory_name_size);
+        memcpy(request.name, current_working_directory_name[current_working_directory_idx], 8);
         struct FAT32DirectoryTable table = {0};
         request.buf = &table;
         syscall(1, (uint32_t)&request, (uint32_t)&retcode, 0);
@@ -157,7 +165,7 @@ void parse_command(uint32_t buf)
         const char *name = (const char *)(buf + 6);
         struct FAT32DriverRequest request = {
             .buf = &cl,
-            .parent_cluster_number = current_working_directory,
+            .parent_cluster_number = current_working_directory[current_working_directory_idx],
             .buffer_size = CLUSTER_SIZE,
         };
         int count = 0;
@@ -186,10 +194,10 @@ void parse_command(uint32_t buf)
     {
         const char *name = (const char *)(buf + 6);
         struct FAT32DriverRequest request = {
-            .parent_cluster_number = current_working_directory,
+            .parent_cluster_number = current_working_directory[current_working_directory_idx],
             .buffer_size = 0,
         };
-        memcpy(request.name, name, sizeof(request.name) - 1);
+        memcpy(request.name, name, 8);
         syscall(2, (uint32_t)&request, (uint32_t)&retcode, 0);
         if (retcode == 0)
         {
@@ -206,7 +214,7 @@ void parse_command(uint32_t buf)
 
         struct FAT32DriverRequest request =
             {
-                .parent_cluster_number = current_working_directory,
+                .parent_cluster_number = current_working_directory[current_working_directory_idx],
                 .buf = &cl,
                 // .buffer_size = 256,
             };
@@ -241,7 +249,7 @@ void parse_command(uint32_t buf)
     {
         const char *name = (const char *)(buf + 3);
         struct FAT32DriverRequest request = {
-            .parent_cluster_number = current_working_directory,
+            .parent_cluster_number = current_working_directory[current_working_directory_idx],
         };
         // loop until find .
         int count = 0;
@@ -286,8 +294,11 @@ int main(void)
     {
         puts("mampOS@OS-IF2230", 16, 0x2);
         puts(":", 1, 0x8);
-        puts("/", 1, 0x1);
-        puts(current_working_directory_name, current_working_directory_name_size, 0x1);
+        for (uint32_t i = 0; i < current_working_directory_idx + 1; i++)
+        {
+            puts("/", 1, 0x1);
+            puts(current_working_directory_name[i], 8, 0x1);
+        }
         puts("$ ", 2, 0x8);
         syscall(4, (uint32_t)buf, 16, 0);
         parse_command((uint32_t)buf);
