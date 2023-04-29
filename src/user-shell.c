@@ -69,13 +69,28 @@ void parse_command(uint32_t buf)
     {
         struct FAT32DriverRequest request = {
             .name = "root",
+            .buf = &cl,
             .parent_cluster_number = current_working_directory,
             .buffer_size = 0,
         };
+        struct FAT32DirectoryTable table = {0};
+        request.buf = &table;
         syscall(1, (uint32_t)&request, (uint32_t)&retcode, 0);
         if (retcode == 0)
         {
-            puts(request.buf, 256, 0xF);
+            for (int i = 0; i < 16; i++)
+            {
+                if (table.table[i].name[0] == 0)
+                {
+                    break;
+                }
+                puts(table.table[i].name, 8, 0xF);
+                if (table.table[i].ext[0] != 0) {
+                    puts(".", 1, 0xF);
+                    puts(table.table[i].ext, 3, 0xF);
+                }
+                puts("\n", 1, 0xF);
+            }
         }
         else
         {
