@@ -112,7 +112,8 @@ void parse_command(uint32_t buf)
                     break;
                 }
                 puts(table.table[i].name, 8, 0xF);
-                if (table.table[i].ext[0] != 0) {
+                if (table.table[i].ext[0] != 0)
+                {
                     puts(".", 1, 0xF);
                     puts(table.table[i].ext, 3, 0xF);
                 }
@@ -196,7 +197,6 @@ void parse_command(uint32_t buf)
     }
     else if (memcmp((char *)buf, "cp", 2) == 0)
     {
-
     }
     else if (memcmp((char *)buf, "rm", 2) == 0)
     {
@@ -229,7 +229,6 @@ void parse_command(uint32_t buf)
     }
     else if (memcmp((char *)buf, "mv", 2) == 0)
     {
-        
     }
     else if (memcmp((char *)buf, "whereis", 7) == 0)
     {
