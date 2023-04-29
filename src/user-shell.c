@@ -2,7 +2,9 @@
 #include "filesystem/fat32.h"
 #include "lib-header/framebuffer.h"
 
+
 static uint32_t current_working_directory = ROOT_CLUSTER_NUMBER;
+static char *current_working_directory_name = "root";
 
 void syscall(uint32_t eax, uint32_t ebx, uint32_t ecx, uint32_t edx)
 {
@@ -63,34 +65,47 @@ void parse_command(uint32_t buf)
     }
     else if (memcmp((char *)buf, "cd", 2) == 0)
     {
-        // // syscall(5, buf + 3, 16 - 3, 0xF);
-        // const char *name = (const char *)(buf + 3);
-        // struct FAT32DriverRequest request = {
-        //     .parent_cluster_number = current_working_directory,
-        //     .buffer_size = 0,
-        // };
-        // struct FAT32DirectoryTable table = {0};
-        // request.buf = &table;
-        // syscall(1, (uint32_t)&request, (uint32_t)&retcode, 0);
-        // if (retcode == 0)
-        // {
-        //     for (int i = 0; i < 16; i++)
-        //     {
-        //         if (table.table[i].name[0] == 0)
-        //         {
-        //             break;
-        //         }
-        //         if (memcmp(table.table[i].name, name, 8) == 0)
-        //         {
-        //             current_working_directory = table.table[i].cluster_high << 16 | table.table[i].cluster_low;
-        //             break;
-        //         }
-        //     }
-        // }
-        // else
-        // {
-        //     puts("Read Failed", 11, 0x4);
-        // }
+        // syscall(5, buf + 3, 16 - 3, 0xF);
+        const char *name = (const char *)(buf + 3);
+        struct FAT32DriverRequest request = {
+            .buf = &cl,
+            .parent_cluster_number = current_working_directory,
+            .buffer_size = 0,
+        };
+        memcpy(request.name, current_working_directory_name, sizeof(current_working_directory_name));
+        struct FAT32DirectoryTable table = {0};
+        request.buf = &table;
+        if (memcmp(name, "..", 2) == 0 && current_working_directory != ROOT_CLUSTER_NUMBER) {
+            current_working_directory = ROOT_CLUSTER_NUMBER;
+            current_working_directory_name = "root";
+            puts("You are in root", 15, 0x2);
+            return;
+        }
+        syscall(1, (uint32_t)&request, (uint32_t)&retcode, 0);
+        if (retcode == 0)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                if (table.table[i].name[0] == 0)
+                {
+                    puts("Change Directory Failed", 23, 0x4);
+                    break;
+                }
+                if (memcmp(table.table[i].name, name, 8) == 0)
+                {
+                    current_working_directory = table.table[i].cluster_high << 16 | table.table[i].cluster_low;
+                    current_working_directory_name = table.table[i].name;
+                    puts("You are in ", 11, 0x2);
+                    puts(table.table[i].name, 8, 0x2);
+                    
+                    break;
+                }
+            }
+        }
+        else
+        {
+            puts("Change Directory Failed", 23, 0x4);
+        }
     }
     else if (memcmp((char *)buf, "ls", 2) == 0)
     {
