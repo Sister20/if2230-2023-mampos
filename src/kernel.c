@@ -13,7 +13,7 @@
 void kernel_setup(void)
 {
     // Milestone 3
-    splash();
+    // splash();
     enter_protected_mode(&_gdt_gdtr);
     pic_remap();
     initialize_idt();
@@ -112,8 +112,8 @@ void kernel_setup(void)
     // request.buffer_size = 5 * CLUSTER_SIZE;
     // read(request); // Success read on file "daijoubu"
 
-    while (TRUE)
-        ;
+    // while (TRUE)
+    //     ;
     // End of Milestone 2
 
     // Milestone 1
