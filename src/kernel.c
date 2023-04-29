@@ -45,7 +45,7 @@ void kernel_setup(void)
     write(reqs);
 
     struct ClusterBuffer cbuf[5];
-    char *isi = "woi bewe goblok anjing kontol memek babi ngentot";
+    char *isi = "woi bewe goblok anjing kontol memek babi ngentot\ntestes\ntes\ntes";
     for (uint32_t i = 0; i < 5; i++)
         for (uint32_t j = 0; j < CLUSTER_SIZE; j++)
             cbuf[i].buf[j] = isi[j];
@@ -54,7 +54,7 @@ void kernel_setup(void)
         .name = "ikanaide",
         .ext = "uwu",
         .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size = 49,
+        .buffer_size = 64,
     };
     write(req);
 

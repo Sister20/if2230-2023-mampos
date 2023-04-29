@@ -137,8 +137,19 @@ void syscall(struct CPURegister cpu, __attribute__((unused)) struct InterruptSta
 
 void puts(char *str, uint32_t len, uint8_t color, uint8_t row, uint8_t col) {
     framebuffer_set_cursor(row, col);
-    for (uint32_t i = 0; i < len; i++) {
-        framebuffer_write(row, i + col, str[i], color, 0);
+    uint32_t i = 0;
+    while (i < len) {
+        if (str[i] == '\n') {
+            row++;
+            col = 0;
+            i++;
+            framebuffer_set_cursor(row, col);
+        }
+        else {
+            framebuffer_write(row, col, str[i], color, 0);
+            col++;
+            i++;
+        }
     }
-    framebuffer_set_cursor(row, col + len);
+    framebuffer_set_cursor(row, col);
 }

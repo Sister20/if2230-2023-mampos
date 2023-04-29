@@ -474,10 +474,6 @@ int8_t read(struct FAT32DriverRequest request)
         }
     }
     return -1;
-    // int8_t foundIdx = -1;
-    // for (int i = 0; i < 64; i++)
-    // {
-    // }
 }
 
 // pertama read cluster trs loop nyari name ext yg sama kl ketemu abis itu
