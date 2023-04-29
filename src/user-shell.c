@@ -5,6 +5,7 @@
 
 static uint32_t current_working_directory = ROOT_CLUSTER_NUMBER;
 static char *current_working_directory_name = "root";
+static uint32_t current_working_directory_name_size = 4;
 
 void syscall(uint32_t eax, uint32_t ebx, uint32_t ecx, uint32_t edx)
 {
@@ -78,6 +79,7 @@ void parse_command(uint32_t buf)
         if (memcmp(name, "..", 2) == 0 && current_working_directory != ROOT_CLUSTER_NUMBER) {
             current_working_directory = ROOT_CLUSTER_NUMBER;
             current_working_directory_name = "root";
+            current_working_directory_name_size = 4;
             puts("You are in root", 15, 0x2);
             return;
         }
@@ -95,6 +97,7 @@ void parse_command(uint32_t buf)
                 {
                     current_working_directory = table.table[i].cluster_high << 16 | table.table[i].cluster_low;
                     current_working_directory_name = table.table[i].name;
+                    current_working_directory_name_size = sizeof(table.table[i].name);
                     puts("You are in ", 11, 0x2);
                     puts(table.table[i].name, 8, 0x2);
                     
@@ -110,23 +113,32 @@ void parse_command(uint32_t buf)
     else if (memcmp((char *)buf, "ls", 2) == 0)
     {
         struct FAT32DriverRequest request = {
-            .name = "root",
             .buf = &cl,
             .parent_cluster_number = current_working_directory,
             .buffer_size = 0,
         };
+        memcpy(request.name, current_working_directory_name, sizeof(current_working_directory_name));
         struct FAT32DirectoryTable table = {0};
         request.buf = &table;
         syscall(1, (uint32_t)&request, (uint32_t)&retcode, 0);
         if (retcode == 0)
         {
-            for (int i = 0; i < 16; i++)
+            for (int i = 1; i < 16; i++)
             {
                 if (table.table[i].name[0] == 0)
                 {
                     break;
                 }
-                puts(table.table[i].name, 8, 0xF);
+                int count = 0;
+                for (int j = 0; j < 8; j++)
+                {
+                    if (table.table[i].name[j] == '.')
+                    {
+                        break;
+                    }
+                    count++;
+                }
+                puts(table.table[i].name, count, 0xF);
                 if (table.table[i].ext[0] != 0)
                 {
                     puts(".", 1, 0xF);
@@ -137,27 +149,39 @@ void parse_command(uint32_t buf)
         }
         else
         {
-            puts("Read Failed", 11, 0x4);
+            puts("No file in this directory", 25, 0x4);
         }
     }
-    // else if (memcmp((char *)buf, "touch", 5) == 0)
-    // {
-    //     const char *name = (const char *)(buf + 6);
-    //     struct FAT32DriverRequest request = {
-    //         .parent_cluster_number = current_working_directory,
-    //         .buffer_size = 0,
-    //     };
-    //     memcpy(request.name, name, sizeof(request.name) - 1);
-    //     syscall(4, (uint32_t)&request, (uint32_t)&retcode, 0);
-    //     if (retcode == 0)
-    //     {
-    //         puts("Write File Success", 19, 0x2);
-    //     }
-    //     else
-    //     {
-    //         puts("Write File Failed", 18, 0x4);
-    //     }
-    // }
+    else if (memcmp((char *)buf, "touch", 5) == 0)
+    {
+        const char *name = (const char *)(buf + 6);
+        struct FAT32DriverRequest request = {
+            .buf = &cl,
+            .parent_cluster_number = current_working_directory,
+            .buffer_size = CLUSTER_SIZE,
+        };
+        int count = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            if (name[i] == '.')
+            {
+                break;
+            }
+            request.name[i] = name[i];
+            count++;
+        }
+        memcpy(request.name, name, count);
+        memcpy(request.ext, name + count + 1, 3);
+        syscall(2, (uint32_t)&request, (uint32_t)&retcode, 0);
+        if (retcode == 0)
+        {
+            puts("Write File Success", 19, 0x2);
+        }
+        else
+        {
+            puts("Write File Failed", 18, 0x4);
+        }
+    }
     else if (memcmp((char *)buf, "mkdir", 5) == 0)
     {
         const char *name = (const char *)(buf + 6);
@@ -262,6 +286,7 @@ int main(void)
         puts("mampOS@OS-IF2230", 16, 0x2);
         puts(":", 1, 0x8);
         puts("/", 1, 0x1);
+        puts(current_working_directory_name, current_working_directory_name_size, 0x1);
         puts("$ ", 2, 0x8);
         syscall(4, (uint32_t)buf, 16, 0);
         parse_command((uint32_t)buf);
