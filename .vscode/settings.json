@@ -1,11 +1,13 @@
 {
     "debug.onTaskErrors": "debugAnyway",
     "files.associations": {
+        "*.pl": "prolog",
         "interrupt.h": "c",
         "stdtype.h": "c",
         "stdmem.h": "c",
         "fat32.h": "c",
-        "framebuffer.h": "c"
+        "framebuffer.h": "c",
+        "__config": "c"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/FlowFrameKit.framework",
 }

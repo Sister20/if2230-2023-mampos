@@ -13,6 +13,7 @@
 void kernel_setup(void)
 {
     // Milestone 3
+    splash();
     enter_protected_mode(&_gdt_gdtr);
     pic_remap();
     initialize_idt();

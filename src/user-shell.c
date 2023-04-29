@@ -66,8 +66,6 @@ void parse_command(uint32_t buf)
         // syscall(5, buf + 3, 16 - 3, 0xF);
         const char *name = (const char *)(buf + 3);
         struct FAT32DriverRequest request = {
-            .name = "root",
-            .buf = &cl,
             .parent_cluster_number = current_working_directory,
             .buffer_size = 0,
         };
@@ -198,6 +196,7 @@ void parse_command(uint32_t buf)
     }
     else if (memcmp((char *)buf, "cp", 2) == 0)
     {
+
     }
     else if (memcmp((char *)buf, "rm", 2) == 0)
     {
@@ -230,6 +229,7 @@ void parse_command(uint32_t buf)
     }
     else if (memcmp((char *)buf, "mv", 2) == 0)
     {
+        
     }
     else if (memcmp((char *)buf, "whereis", 7) == 0)
     {
