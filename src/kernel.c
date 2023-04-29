@@ -39,7 +39,7 @@ void kernel_setup(void)
     read(request);
 
     struct FAT32DriverRequest reqs = {
-        .name = "ikanaide",
+        .name = "ika",
         .parent_cluster_number = ROOT_CLUSTER_NUMBER,
         .buffer_size = 0,
     };

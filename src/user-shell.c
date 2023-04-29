@@ -93,7 +93,7 @@ void parse_command(uint32_t buf)
                     puts("Change Directory Failed", 23, 0x4);
                     break;
                 }
-                if (memcmp(table.table[i].name, name, 8) == 0)
+                if (memcmp(table.table[i].name, name, 8) == 0 && table.table[i].ext[0] == 0)
                 {
                     current_working_directory = table.table[i].cluster_high << 16 | table.table[i].cluster_low;
                     current_working_directory_name = table.table[i].name;
@@ -117,7 +117,7 @@ void parse_command(uint32_t buf)
             .parent_cluster_number = current_working_directory,
             .buffer_size = 0,
         };
-        memcpy(request.name, current_working_directory_name, sizeof(current_working_directory_name));
+        memcpy(request.name, current_working_directory_name, current_working_directory_name_size);
         struct FAT32DirectoryTable table = {0};
         request.buf = &table;
         syscall(1, (uint32_t)&request, (uint32_t)&retcode, 0);
@@ -271,6 +271,7 @@ void parse_command(uint32_t buf)
     }
     else if (memcmp((char *)buf, "whereis", 7) == 0)
     {
+        puts("cari sendiri jangan males ;)", 28, 0xD);
     }
     else
     {
